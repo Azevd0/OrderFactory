@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -31,8 +30,8 @@ public class AtendenteController {
                 .toList();
         return ResponseEntity.ok(list);
     }
-    @Operation(summary = "Buscar atendente por nome")
 
+    @Operation(summary = "Buscar atendente por nome")
     @GetMapping("/busca/{nome}")
     public ResponseEntity<AtendenteResponseDTO> buscarPorNome(@PathVariable String nome) {
         Atendente atendente = atendenteService.searchForName(nome);
