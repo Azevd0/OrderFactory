@@ -8,6 +8,7 @@ import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.PedidoRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ReciboRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,20 @@ public class PedidoService {
 //        Pedido pedidoSalvo = pedidoRepository.save(novoPedido);
 //        return new PedidoResponseDTO(pedidoSalvo);
 //    }
+    @Transactional
+    public PedidoResponseDTO adicionarComida(Integer mesa, String nomeComida) {
+        Pedido pedido = buscarPorMesa(mesa);
+
+        if (pedido.getStatusPagamento()) {
+        throw new DataIntegrityViolationException("Não é possível adicionar itens. O pedido da mesa " + mesa + " já está fechado.");
+        }
+        Comida novaComida = comidaRepository.findByNomeIgnoreCase(nomeComida)
+            .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nomeComida + "' não encontrada no cardápio."));
+
+        pedido.getComidas().add(novaComida);
+        return new PedidoResponseDTO(pedidoRepository.save(pedido));
+}
+
 
     public Pedido buscarPorMesa(Integer mesa) {
         return pedidoRepository.findByMesa(mesa)
