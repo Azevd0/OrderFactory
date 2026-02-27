@@ -1,8 +1,11 @@
 package com.br.davyson.GerenciamentoPedidos.services;
 
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoResponseDTO;
+import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
+import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
+import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
@@ -101,10 +104,11 @@ public class PedidoService {
     }
 
     @Transactional
-    public PedidoResponseDTO registrarPagamento(Integer mesa, BigDecimal valorRecebido) {
+    public Object registrarPagamento(Integer mesa, BigDecimal valorRecebido, FormaPagamento formaDePagamento) {
         Pedido pedido = buscarPorMesa(mesa);
 
         pedido.setValorPago(pedido.getValorPago().add(valorRecebido));
+        pedido.setFormaDePagamento(formaDePagamento);
 
         BigDecimal totalComTaxa = pedido.getValorTotal();
         BigDecimal subtotalSemTaxa = pedido.getSubtotal();
@@ -112,6 +116,12 @@ public class PedidoService {
 
         if (totalPago.compareTo(totalComTaxa) >= 0 || totalPago.compareTo(subtotalSemTaxa) >= 0) {
             pedido.setStatusPagamento(true);
+            Recibo recibo = new Recibo(pedido);
+
+            reciboRepository.save(recibo);
+            pedidoRepository.delete(pedido);
+
+            return new ReciboResponseDTO(recibo);
         }
         return new PedidoResponseDTO(pedidoRepository.save(pedido));
     }

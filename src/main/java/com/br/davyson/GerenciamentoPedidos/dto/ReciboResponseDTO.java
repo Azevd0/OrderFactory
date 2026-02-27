@@ -1,5 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.dto;
 
+import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
 import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
 
 import java.math.BigDecimal;
@@ -14,12 +15,8 @@ public class ReciboResponseDTO {
         this.id = recibo.getId();
         this.dataFechamento = recibo.getDataFechamento();
         this.valorTotal = recibo.getValorTotal();
-
-        if (recibo.getFormaPagamento() != null) {
-            this.formaPagamento = recibo.getFormaPagamento().name();
-        }
+        this.formaPagamento = (recibo.getFormaPagamento() != null) ? recibo.getFormaPagamento().name() : null;
     }
-
 
     public Long getId() { return id; }
     public LocalDateTime getDataFechamento() { return dataFechamento; }

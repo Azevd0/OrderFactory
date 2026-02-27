@@ -2,12 +2,12 @@ package com.br.davyson.GerenciamentoPedidos.dto;
 
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
+import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 public class PedidoResponseDTO {
     private Long id;
@@ -19,8 +19,8 @@ public class PedidoResponseDTO {
     private BigDecimal taxaServico;
     private BigDecimal valorTotal;
     private BigDecimal valorPago;
+    private FormaPagamento formaDePagamento;
     private BigDecimal saldoRestante;
-
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime data;
@@ -35,6 +35,7 @@ public class PedidoResponseDTO {
         this.taxaServico = pedido.getTaxaServico();
         this.valorTotal = pedido.getValorTotal();
         this.valorPago = pedido.getValorPago();
+        this.formaDePagamento = pedido.getFormaDePagamento();
         this.saldoRestante = this.valorTotal.subtract(this.valorPago).max(BigDecimal.ZERO);
         this.data = pedido.getData();
     }
@@ -92,6 +93,38 @@ public class PedidoResponseDTO {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public BigDecimal getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(BigDecimal subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public BigDecimal getValorPago() {
+        return valorPago;
+    }
+
+    public void setValorPago(BigDecimal valorPago) {
+        this.valorPago = valorPago;
+    }
+
+    public FormaPagamento getFormaDePagamento() {
+        return formaDePagamento;
+    }
+
+    public void setFormaDePagamento(FormaPagamento formaDePagamento) {
+        this.formaDePagamento = formaDePagamento;
+    }
+
+    public BigDecimal getSaldoRestante() {
+        return saldoRestante;
+    }
+
+    public void setSaldoRestante(BigDecimal saldoRestante) {
+        this.saldoRestante = saldoRestante;
     }
 
     public LocalDateTime getData() {

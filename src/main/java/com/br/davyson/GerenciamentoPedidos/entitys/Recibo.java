@@ -27,6 +27,12 @@ public class Recibo {
 
     public Recibo(){}
 
+    public Recibo(Pedido pedido) {
+        this.dataFechamento = pedido.getData();
+        this.valorTotal = pedido.getValorPago();
+        this.formaPagamento = pedido.getFormaDePagamento();
+    }
+
     public Long getId() {
         return id;
     }
