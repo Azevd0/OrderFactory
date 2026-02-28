@@ -1,5 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.controllers;
 
+import com.br.davyson.GerenciamentoPedidos.dto.FaturamentoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.services.ReciboService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +25,16 @@ public class ReciboController {
     }
 
     @Operation(summary = "Listar histórico de pagamentos")
-    @GetMapping("/historico")
+    @GetMapping("/historico-de-vendas")
     public ResponseEntity<List<ReciboResponseDTO>> obterHistorico(
             @Parameter(description = "Período: 'semana', 'quinzena' ou 'tudo'")
             @RequestParam(defaultValue = "tudo") String periodo) {
         List<ReciboResponseDTO> historico = reciboService.listarHistorico(periodo);
         return ResponseEntity.ok(historico);
+    }
+    @Operation(summary = "Ver faturamento total")
+    @GetMapping("/faturamento")
+    public ResponseEntity<FaturamentoResponseDTO> verFaturamento() {
+        return ResponseEntity.ok(reciboService.calcularFaturamento());
     }
 }
