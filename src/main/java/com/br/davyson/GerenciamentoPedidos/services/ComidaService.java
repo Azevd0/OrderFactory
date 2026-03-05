@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class ComidaService {
     private final ComidaRepository comidaRepository;
@@ -32,6 +33,10 @@ public class ComidaService {
             throw new ObjectNotFoundException("Nenhuma comida encontrada com o termo: " + nome);
         }
         return resultados;
+    }
+    public Comida findComidaByName(String nome) {
+        return comidaRepository.findByNomeIgnoreCase(nome)
+                .orElseThrow(() -> new ObjectNotFoundException("Comida não encontrada."));
     }
     public Comida findById(Long id) {
         return comidaRepository.findById(id)

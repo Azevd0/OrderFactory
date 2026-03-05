@@ -26,16 +26,18 @@ public class PedidoService {
     private final AtendenteRepository atendenteRepository;
     private final ReciboRepository reciboRepository;
     private final AtendenteService atendenteService;
+    private final ComidaService comidaService;
 
-    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, AtendenteRepository atendenteRepository, ReciboRepository reciboRepository,AtendenteService atendenteService) {
+    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, AtendenteRepository atendenteRepository, ReciboRepository reciboRepository, AtendenteService atendenteService, ComidaService comidaService) {
         this.pedidoRepository = pedidoRepository;
         this.comidaRepository = comidaRepository;
         this.atendenteRepository = atendenteRepository;
         this.reciboRepository = reciboRepository;
         this.atendenteService = atendenteService;
+        this.comidaService = comidaService;
     }
 
-//    @Transactional
+    //    @Transactional
 //    public PedidoResponseDTO lancarPedido(PedidoRequestDTO dto) {
 //        String nomeUsuarioLogado = "Davyson de Azevedo";
 //        Atendente atendente = atendenteService.searchForName(nomeUsuarioLogado);
@@ -95,6 +97,12 @@ public class PedidoService {
         pedidoRepository.save(pedidoOrigem);
         Pedido pedidoAtualizado = pedidoRepository.save(pedidoDestino);
         return new PedidoResponseDTO(pedidoAtualizado);
+    }
+    @Transactional
+    public void cancelarComida(Integer mesa, String comidaNome){
+        Pedido pedido = buscarPorMesa(mesa);
+        Comida comidaCancelada = comidaService.findComidaByName(comidaNome);
+        pedido.getComidas().remove(comidaCancelada);
     }
 
     @Transactional

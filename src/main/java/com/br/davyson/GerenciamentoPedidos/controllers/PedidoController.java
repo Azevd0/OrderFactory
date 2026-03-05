@@ -57,8 +57,16 @@ public class PedidoController {
     }
     @Operation(summary = "Registrar pagamento")
     @PatchMapping("/pagamento/{mesa}")
-    public ResponseEntity<Object> registrarPagamento(@PathVariable Integer mesa, @RequestParam BigDecimal valor, @RequestParam FormaPagamento forma, @PathVariable Integer qtdPessoas) {
+    public ResponseEntity<Object> registrarPagamento(@PathVariable Integer mesa, @RequestParam BigDecimal valor, @RequestParam FormaPagamento forma, @RequestParam Integer qtdPessoas) {
         Object resultado = pedidoService.registrarPagamento(mesa, valor, forma, qtdPessoas);
         return ResponseEntity.ok(resultado);
+    }
+    @Operation(summary = "Remover um item específico do pedido")
+    @DeleteMapping("/{mesa}/remover-item")
+    public ResponseEntity<String> removerItem(
+            @PathVariable Integer mesa,
+            @RequestParam String nome) {
+        pedidoService.cancelarComida(mesa, nome);
+        return ResponseEntity.ok("Item removido com sucesso");
     }
 }

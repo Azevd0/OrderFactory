@@ -1,7 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.exceptions;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
-import org.apache.coyote.Response;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,11 +54,21 @@ public class GlobalExceptions {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationError);
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<StandardError> httpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request){
+    public ResponseEntity<StandardError> httpMessageNotReadable(HttpServletRequest request){
         StandardError standardError = new StandardError(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Erro de digitação! Revise a requisição!",
+                request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
+    }
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<StandardError> optimisticLock(HttpServletRequest request){
+        StandardError standardError = new StandardError(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Este pedido já está aberto no aparelho de outro funcionário!" +
+                        "\n Apenas um usuário por vez pode fazer alterações.",
                 request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
