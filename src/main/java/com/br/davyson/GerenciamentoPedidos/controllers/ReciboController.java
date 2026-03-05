@@ -32,7 +32,7 @@ public class ReciboController {
     }
 
     @Operation(summary = "Filtrar histórico por período")
-    @GetMapping("/historico-vendas")
+    @GetMapping("/historico-de-vendas")
     public ResponseEntity<List<ReciboResponseDTO>> obterHistorico(
             @RequestParam Fatura periodo) {
         return ResponseEntity.ok(reciboService.listarHistorico(periodo));
