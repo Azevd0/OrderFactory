@@ -31,7 +31,7 @@ public class ReciboController {
         return ResponseEntity.ok(reciboService.calcularFaturamento());
     }
 
-    @Operation(summary = "Filtrar histórico detalhado")
+    @Operation(summary = "Filtrar histórico por período")
     @GetMapping("/historico-vendas")
     public ResponseEntity<List<ReciboResponseDTO>> obterHistorico(
             @RequestParam Fatura periodo) {
