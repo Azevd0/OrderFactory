@@ -14,8 +14,7 @@ public class Atendente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(unique = true)
+    @NotBlank(message = "Login do usuário é obrigatório")
     private String login;
 
     @NotBlank(message = "Nome do usuário é obrigatório")
