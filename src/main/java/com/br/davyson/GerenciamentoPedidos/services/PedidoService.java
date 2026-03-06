@@ -120,7 +120,6 @@ public class PedidoService {
             qtdPessoas = 1;
         }
         pedido.setValorPago(pedido.getValorPago().add(valorRecebido));
-        pedido.setFormaDePagamento(formaDePagamento);
 
         BigDecimal totalComTaxa = pedido.getValorTotal();
         BigDecimal subtotalSemTaxa = pedido.getSubtotal();
@@ -128,7 +127,7 @@ public class PedidoService {
 
         if (totalPago.compareTo(totalComTaxa) >= 0 || totalPago.compareTo(subtotalSemTaxa) >= 0) {
             pedido.setStatusPagamento(true);
-            Recibo recibo = new Recibo(pedido);
+            Recibo recibo = new Recibo(pedido, formaDePagamento);
             BigDecimal media = totalPago.divide(BigDecimal.valueOf(qtdPessoas), 2, RoundingMode.HALF_UP);
             recibo.setMedia(media);
             recibo.setQtdDePessoas(qtdPessoas);

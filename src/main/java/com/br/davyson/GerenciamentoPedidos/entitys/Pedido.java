@@ -38,7 +38,6 @@ public class Pedido {
     private String observacao;
     private BigDecimal valorPago = BigDecimal.ZERO;
     private boolean statusPagamento;
-    private FormaPagamento formaDePagamento;
     @Column(nullable = false, updatable = false)
     private LocalDateTime data = LocalDateTime.now();
 
@@ -106,14 +105,6 @@ public class Pedido {
 
     public void setStatusPagamento(boolean statusPagamento) {
         this.statusPagamento = statusPagamento;
-    }
-
-    public FormaPagamento getFormaDePagamento() {
-        return formaDePagamento;
-    }
-
-    public void setFormaDePagamento(FormaPagamento formaDePagamento) {
-        this.formaDePagamento = formaDePagamento;
     }
 
     public LocalDateTime getData() {

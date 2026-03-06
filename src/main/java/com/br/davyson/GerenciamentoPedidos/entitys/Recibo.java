@@ -31,10 +31,10 @@ public class Recibo {
 
     public Recibo(){}
 
-    public Recibo(Pedido pedido) {
+    public Recibo(Pedido pedido, FormaPagamento formaPagamento) {
         this.dataFechamento = pedido.getData();
         this.valorTotal = pedido.getValorPago();
-        this.formaPagamento = pedido.getFormaDePagamento();
+        this.formaPagamento = formaPagamento;
     }
 
     public Long getId() {

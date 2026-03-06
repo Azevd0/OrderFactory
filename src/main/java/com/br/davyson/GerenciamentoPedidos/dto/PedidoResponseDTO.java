@@ -2,7 +2,6 @@ package com.br.davyson.GerenciamentoPedidos.dto;
 
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
-import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
@@ -19,7 +18,6 @@ public class PedidoResponseDTO {
     private BigDecimal taxaServico;
     private BigDecimal valorTotal;
     private BigDecimal valorPago;
-    private FormaPagamento formaDePagamento;
     private BigDecimal saldoRestante;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -35,7 +33,6 @@ public class PedidoResponseDTO {
         this.taxaServico = pedido.getTaxaServico();
         this.valorTotal = pedido.getValorTotal();
         this.valorPago = pedido.getValorPago();
-        this.formaDePagamento = pedido.getFormaDePagamento();
         this.saldoRestante = this.valorTotal.subtract(this.valorPago).max(BigDecimal.ZERO);
         this.data = pedido.getData();
     }
@@ -109,14 +106,6 @@ public class PedidoResponseDTO {
 
     public void setValorPago(BigDecimal valorPago) {
         this.valorPago = valorPago;
-    }
-
-    public FormaPagamento getFormaDePagamento() {
-        return formaDePagamento;
-    }
-
-    public void setFormaDePagamento(FormaPagamento formaDePagamento) {
-        this.formaDePagamento = formaDePagamento;
     }
 
     public BigDecimal getSaldoRestante() {
