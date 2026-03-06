@@ -16,7 +16,6 @@ public record ComandaResponseDTO(Integer mesa, String atendenteNome,
                 pedido.getMesa(),
                 pedido.getAtendente().getNome(),
                 comida.getNome(),
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
     }
 }

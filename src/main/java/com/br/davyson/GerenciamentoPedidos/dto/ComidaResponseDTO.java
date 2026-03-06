@@ -12,8 +12,6 @@ public record ComidaResponseDTO (Long id, String nome, BigDecimal preco, String 
                 comida.getNome(),
                 comida.getPreco(),
                 comida.getDescricao(),
-                comida.getCategoria() != null ? comida.getCategoria().getNome() : "Sem Categoria"
-
-        );
+                comida.getCategoria() != null ? comida.getCategoria().getNome() : "Sem Categoria");
     }
 }
