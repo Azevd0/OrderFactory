@@ -3,7 +3,6 @@ package com.br.davyson.GerenciamentoPedidos.dto;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class ComidaResponseDTO {
     private Long id;
