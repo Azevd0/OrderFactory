@@ -2,15 +2,13 @@ package com.br.davyson.GerenciamentoPedidos.services;
 
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
+import com.br.davyson.GerenciamentoPedidos.entitys.Comanda;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
 import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
-import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
-import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
-import com.br.davyson.GerenciamentoPedidos.repositorys.PedidoRepository;
-import com.br.davyson.GerenciamentoPedidos.repositorys.ReciboRepository;
+import com.br.davyson.GerenciamentoPedidos.repositorys.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +25,16 @@ public class PedidoService {
     private final ReciboRepository reciboRepository;
     private final AtendenteService atendenteService;
     private final ComidaService comidaService;
+    private final ComandaRepository comandaRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, AtendenteRepository atendenteRepository, ReciboRepository reciboRepository, AtendenteService atendenteService, ComidaService comidaService) {
+    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, AtendenteRepository atendenteRepository, ReciboRepository reciboRepository, AtendenteService atendenteService, ComidaService comidaService, ComandaRepository comandaRepository) {
         this.pedidoRepository = pedidoRepository;
         this.comidaRepository = comidaRepository;
         this.atendenteRepository = atendenteRepository;
         this.reciboRepository = reciboRepository;
         this.atendenteService = atendenteService;
         this.comidaService = comidaService;
+        this.comandaRepository = comandaRepository;
     }
 
     //  RASCUNHO - SÓ VOU CRIAR QUANDO A AUTENTICAÇÃO DE USUÁRIO E RESTRIÇÃO DE ACESSO ESTIVEREM FEITAS
@@ -61,12 +61,18 @@ public class PedidoService {
         Pedido pedido = buscarPorMesa(mesa);
 
         if (pedido.getStatusPagamento()) {
-        throw new DataIntegrityViolationException("Não é possível adicionar itens. O pedido da mesa " + mesa + " já está fechado.");
+            throw new DataIntegrityViolationException("Não é possível adicionar itens. O pedido da mesa " + mesa + " já está fechado.");
         }
-        Comida novaComida = comidaRepository.findByNomeIgnoreCase(nomeComida)
-            .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nomeComida + "' não encontrada no cardápio."));
+            Comida novaComida = comidaRepository.findByNomeIgnoreCase(nomeComida)
+                    .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nomeComida + "' não encontrada no cardápio."));
 
-        pedido.getComidas().add(novaComida);
+            pedido.getComidas().add(novaComida);
+            Comanda comanda = new Comanda();
+            comanda.setMesa(pedido.getMesa());
+            comanda.setAtendenteNome(pedido.getAtendente().getNome());
+            comanda.setComidaNome(novaComida.getNome());
+            comandaRepository.save(comanda);
+
         return new PedidoResponseDTO(pedidoRepository.save(pedido));
 }
 

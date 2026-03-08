@@ -1,6 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.enums;
 
-public enum Fatura {
+public enum Periodo {
     TOTAL_HOJE,
     TOTAL_SEMANA,
     TOTAL_QUINZENA,

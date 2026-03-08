@@ -3,7 +3,7 @@ package com.br.davyson.GerenciamentoPedidos.services;
 import com.br.davyson.GerenciamentoPedidos.dto.FaturamentoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
-import com.br.davyson.GerenciamentoPedidos.enums.Fatura;
+import com.br.davyson.GerenciamentoPedidos.enums.Periodo;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ReciboRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class ReciboService {
         this.reciboRepository = reciboRepository;
     }
 
-    public List<ReciboResponseDTO> listarHistorico(Fatura periodo) {
+    public List<ReciboResponseDTO> listarHistorico(Periodo periodo) {
         LocalDateTime dataLimite = switch (periodo) {
             case TOTAL_HOJE -> LocalDate.now().atStartOfDay();
             case TOTAL_SEMANA -> LocalDateTime.now().minusWeeks(1);
