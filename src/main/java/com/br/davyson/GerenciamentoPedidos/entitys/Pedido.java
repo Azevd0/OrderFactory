@@ -1,7 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoRequestDTO;
-import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,6 +36,7 @@ public class Pedido {
     private BigDecimal valorPago = BigDecimal.ZERO;
     private boolean statusPagamento;
     @Column(nullable = false, updatable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime data = LocalDateTime.now();
 
 

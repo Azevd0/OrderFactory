@@ -1,5 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -16,8 +17,9 @@ public class Comanda {
 
     private String atendenteNome;
 
-    private String comidaNome;
 
+    private String comidaNome;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataLancamento = LocalDateTime.now();
 
     public Comanda(Long id, Integer mesa, Atendente atendente, Comida comida, LocalDateTime dataLancamento) {

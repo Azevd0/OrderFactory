@@ -1,6 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,8 +12,8 @@ public class Recibo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private LocalDateTime dataFechamento;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dataFechamento = LocalDateTime.now();
     private BigDecimal valorTotal;
 
     @Enumerated(EnumType.STRING)

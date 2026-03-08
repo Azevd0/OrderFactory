@@ -1,11 +1,10 @@
 package com.br.davyson.GerenciamentoPedidos.dto;
 
 import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-public record ReciboResponseDTO (Long id, @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")LocalDateTime dataDeFechamento,
+public record ReciboResponseDTO (Long id, LocalDateTime dataDeFechamento,
                                  BigDecimal valorTotal, String formaDePagamento, Integer qtdDePessoas,
                                  BigDecimal mediaPorPessoa){
 
