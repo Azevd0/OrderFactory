@@ -22,10 +22,10 @@ public class ReciboService {
 
     public List<ReciboResponseDTO> listarHistorico(Periodo periodo) {
         LocalDateTime dataLimite = switch (periodo) {
-            case TOTAL_HOJE -> LocalDate.now().atStartOfDay();
-            case TOTAL_SEMANA -> LocalDateTime.now().minusWeeks(1);
-            case TOTAL_QUINZENA -> LocalDateTime.now().minusWeeks(2);
-            case TOTAL_MENSAL -> LocalDateTime.now().minusMonths(1);
+            case HOJE -> LocalDate.now().atStartOfDay();
+            case ESTA_SEMANA -> LocalDateTime.now().minusWeeks(1);
+            case ESTA_QUINZENA -> LocalDateTime.now().minusWeeks(2);
+            case ESTE_MES -> LocalDateTime.now().minusMonths(1);
         };
         return reciboRepository.findByDataFechamentoAfter(dataLimite).stream().map(ReciboResponseDTO::new).toList();
     }
