@@ -1,7 +1,10 @@
 package com.br.davyson.GerenciamentoPedidos.database;
 
+import com.br.davyson.GerenciamentoPedidos.entitys.CartaoCliente;
 import com.br.davyson.GerenciamentoPedidos.entitys.Categoria;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
+import com.br.davyson.GerenciamentoPedidos.enums.BandeiraCartao;
+import com.br.davyson.GerenciamentoPedidos.repositorys.CartaoClienteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
-public class DbMenu {
+public class DbApi {
 
     @Autowired
     public CategoriaRepository categoriaRepository;
-
     @Autowired
     public ComidaRepository comidaRepository;
+    @Autowired
+    public CartaoClienteRepository cartaoClienteRepository;
 
     public void instanciarMenu(){
         Categoria c1 = new Categoria("Sobremesas");
@@ -107,6 +112,23 @@ public class DbMenu {
 
         comidaRepository.saveAll(Arrays.asList(cm1, cm2, cm3, cm4, cm5, cm6, cm7, cm8, cm9, cm10,
                 cm11, cm12, cm13, cm14, cm15, cm16, cm17, cm18, cm19, cm20, cm21, cm22, cm23, cm24, cm25));
+    }
+
+    public void instanciarCartoes(){
+            CartaoCliente cartao1 = new CartaoCliente(null, BandeiraCartao.VISA,new BigDecimal("250.00"), 1234);
+            CartaoCliente cartao2 = new CartaoCliente(null, BandeiraCartao.MASTERCARD,new BigDecimal("125.40"), 9876);
+            CartaoCliente cartao3 = new CartaoCliente(null, BandeiraCartao.ELO, new BigDecimal("200.00"),5544);
+            CartaoCliente cartao4 = new CartaoCliente(null, BandeiraCartao.AMERICAN_EXPRESS,new BigDecimal("150.00"), 102030);
+            CartaoCliente cartao5 = new CartaoCliente(null, BandeiraCartao.ALELO,new BigDecimal("340.00"), 8899);
+            CartaoCliente cartao6 = new CartaoCliente(null, BandeiraCartao.SODEXO, new BigDecimal("500.00"),1122);
+            CartaoCliente cartao7 = new CartaoCliente(null, BandeiraCartao.MAESTRO, new BigDecimal("85.00"),3344);
+            CartaoCliente cartao8 = new CartaoCliente(null, BandeiraCartao.HIPERCARD,new BigDecimal("62.00"), 5566);
+            CartaoCliente cartao9 = new CartaoCliente(null, BandeiraCartao.DINERS_CLUB,new BigDecimal("70.00"), 7788);
+            CartaoCliente cartao10 = new CartaoCliente(null, BandeiraCartao.CABAL, new BigDecimal("111.00"),9900);
+
+        cartaoClienteRepository.saveAll(List.of(cartao1, cartao2,cartao3,cartao4,cartao5,
+                cartao6, cartao7, cartao8, cartao9, cartao10));
+
     }
 
 }

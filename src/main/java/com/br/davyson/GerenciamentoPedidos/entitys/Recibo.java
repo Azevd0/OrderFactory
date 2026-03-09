@@ -1,5 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
+import com.br.davyson.GerenciamentoPedidos.enums.BandeiraCartao;
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -18,16 +19,19 @@ public class Recibo {
 
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
+    @Enumerated(EnumType.STRING)
+    private BandeiraCartao bandeiraCartao;
     private Integer qtdDePessoas;
     private BigDecimal media;
 
-    public Recibo(LocalDateTime dataFechamento, BigDecimal valorTotal, String detalheConsumo, FormaPagamento formaPagamento, Integer qtdDePessoas, BigDecimal media) {
+    public Recibo(Long id, LocalDateTime dataFechamento, BigDecimal valorTotal, FormaPagamento formaPagamento, BandeiraCartao bandeiraCartao, Integer qtdDePessoas, BigDecimal media) {
         this.id = id;
         this.dataFechamento = dataFechamento;
         this.valorTotal = valorTotal;
         this.formaPagamento = formaPagamento;
-        this.media = media;
+        this.bandeiraCartao = bandeiraCartao;
         this.qtdDePessoas = qtdDePessoas;
+        this.media = media;
     }
 
     public Recibo(){}
@@ -68,6 +72,14 @@ public class Recibo {
 
     public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
+    }
+
+    public BandeiraCartao getBandeiraCartao() {
+        return bandeiraCartao;
+    }
+
+    public void setBandeiraCartao(BandeiraCartao bandeiraCartao) {
+        this.bandeiraCartao = bandeiraCartao;
     }
 
     public Integer getQtdDePessoas() {

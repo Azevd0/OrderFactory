@@ -1,6 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.profile;
 
-import com.br.davyson.GerenciamentoPedidos.database.DbMenu;
+import com.br.davyson.GerenciamentoPedidos.database.DbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +12,16 @@ import org.springframework.context.annotation.Profile;
 public class TestProfile {
 
     @Autowired
-    public DbMenu dbMenu;
+    public DbApi dbApi;
 
     @Bean
     public CommandLineRunner instanciarMenu() {
         return args -> {
-            dbMenu.instanciarMenu();
+            dbApi.instanciarMenu();
         };
+    }
+    @Bean
+    public CommandLineRunner instanciarCartoes(){
+        return args -> dbApi.instanciarCartoes();
     }
 }

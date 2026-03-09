@@ -46,7 +46,9 @@ public class Atendente {
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        if (login != null) {
+            this.login = login.trim().toLowerCase().replace(" ", "_");
+        }
     }
 
     public Long getId() {

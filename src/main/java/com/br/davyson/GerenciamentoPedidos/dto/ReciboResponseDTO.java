@@ -5,7 +5,7 @@ import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 public record ReciboResponseDTO (Long id, LocalDateTime dataDeFechamento,
-                                 BigDecimal valorTotal, String formaDePagamento, Integer qtdDePessoas,
+                                 BigDecimal valorTotal, String formaDePagamento, String bandeiraCartao, Integer qtdDePessoas,
                                  BigDecimal mediaPorPessoa){
 
     public ReciboResponseDTO(Recibo recibo){
@@ -14,6 +14,7 @@ public record ReciboResponseDTO (Long id, LocalDateTime dataDeFechamento,
                 recibo.getDataFechamento(),
                 recibo.getValorTotal(),
                 recibo.getFormaPagamento() != null ? recibo.getFormaPagamento().name() : null,
+                recibo.getBandeiraCartao() != null ? recibo.getBandeiraCartao().name() :null,
                 recibo.getQtdDePessoas(),
                 recibo.getMedia()
         );
