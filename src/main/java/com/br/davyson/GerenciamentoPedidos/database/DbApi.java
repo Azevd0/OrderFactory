@@ -19,15 +19,17 @@ import java.util.List;
 
 @Service
 public class DbApi {
-
-    @Autowired
     public CategoriaRepository categoriaRepository;
-    @Autowired
     public ComidaRepository comidaRepository;
-    @Autowired
     public CartaoClienteRepository cartaoClienteRepository;
-    @Autowired
     public AtendenteRepository atendenteRepository;
+
+    public DbApi(CategoriaRepository categoriaRepository, ComidaRepository comidaRepository, CartaoClienteRepository cartaoClienteRepository, AtendenteRepository atendenteRepository) {
+        this.categoriaRepository = categoriaRepository;
+        this.comidaRepository = comidaRepository;
+        this.cartaoClienteRepository = cartaoClienteRepository;
+        this.atendenteRepository = atendenteRepository;
+    }
 
     public void instanciarMenu(){
         Categoria c1 = new Categoria("Sobremesas");

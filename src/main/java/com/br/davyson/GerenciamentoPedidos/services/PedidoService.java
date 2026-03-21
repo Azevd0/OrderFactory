@@ -15,25 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ComidaRepository comidaRepository;
-    private final AtendenteRepository atendenteRepository;
     private final ReciboRepository reciboRepository;
     private final AtendenteService atendenteService;
     private final ComidaService comidaService;
     private final ComandaRepository comandaRepository;
     private final CartaoClienteRepository cartaoClienteRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, AtendenteRepository atendenteRepository, ReciboRepository reciboRepository, AtendenteService atendenteService, ComidaService comidaService, ComandaRepository comandaRepository, CartaoClienteRepository cartaoClienteRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, ComidaRepository comidaRepository, ReciboRepository reciboRepository, AtendenteService atendenteService, ComidaService comidaService, ComandaRepository comandaRepository, CartaoClienteRepository cartaoClienteRepository) {
         this.pedidoRepository = pedidoRepository;
         this.comidaRepository = comidaRepository;
-        this.atendenteRepository = atendenteRepository;
         this.reciboRepository = reciboRepository;
         this.atendenteService = atendenteService;
         this.comidaService = comidaService;
