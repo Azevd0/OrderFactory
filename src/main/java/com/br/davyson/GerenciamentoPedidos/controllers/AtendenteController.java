@@ -37,7 +37,6 @@ public class AtendenteController {
     public ResponseEntity<AtendenteResponseDTO> buscarPorNome(@PathVariable String nome) {
         return ResponseEntity.ok(atendenteService.buscarPorNome(nome));
     }
-    //AtendenteResponseDTO atendente = atendenteService.buscarPorNome(nome);
     @Operation(summary = "Listar pedidos do atendente pelo seu id")
     @GetMapping("/listarPedidos/{id}")
     public ResponseEntity<ListWrapper<PedidoResponseDTO>> listarPedidosDoAtendente(@PathVariable Long id){

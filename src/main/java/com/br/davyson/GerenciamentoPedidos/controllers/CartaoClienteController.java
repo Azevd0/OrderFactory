@@ -19,6 +19,7 @@ public class CartaoClienteController {
     public CartaoClienteController(CartaoClienteService service) {
         this.service = service;
     }
+
     @Operation(summary = "Listar todos os cartões cadastrados")
     @GetMapping
     public ResponseEntity<ListWrapper<CartaoClienteResponseDTO>> listar() {

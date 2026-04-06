@@ -5,6 +5,7 @@ import com.br.davyson.GerenciamentoPedidos.entitys.CartaoCliente;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CartaoClienteRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,12 +17,12 @@ public class CartaoClienteService {
     public CartaoClienteService(CartaoClienteRepository repository) {
         this.repository = repository;
     }
-
+    @Cacheable(value = "clientes", key = "'all_cards'")
     public ListWrapper<CartaoClienteResponseDTO> listarCartoes() {
         List<CartaoClienteResponseDTO> cartoes = repository.findAll().stream().map(CartaoClienteResponseDTO::new).toList();
         return new ListWrapper<>(cartoes);
     }
-
+    @Cacheable(value = "clientes", key = "'card_' + #id")
     public CartaoClienteResponseDTO buscarPorId(Long id) {
         CartaoCliente cartao = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Cartão não encontrado com o ID: " + id));

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +53,19 @@ public class RedisConfig {
                 .withCacheConfiguration("historico", baseConfig.entryTtl(Duration.ofDays(30)))
                 .withCacheConfiguration("historico_financeiro", baseConfig.entryTtl(Duration.ofDays(30)))
                 .build();
+    }
+
+    @Bean
+    public CommandLineRunner clearCacheOnStartup(RedisConnectionFactory connectionFactory) {
+        return args -> {
+            System.out.println("Limpando caches residuais...");
+            try {
+                connectionFactory.getConnection().serverCommands().flushAll();
+                System.out.println("Cache limpo com sucesso!");
+            } catch (Exception e) {
+                System.err.println("Falha ao limpar cache: " + e.getMessage());
+            }
+        };
     }
 
 }

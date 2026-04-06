@@ -7,6 +7,8 @@ import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
         this.comidaRepository = comidaRepository;
     }
-
+    @Cacheable(value = "cardapio", key = "'todas_categorias'")
     public ListWrapper<CategoriaResponseDTO> ListAll() {
         List<CategoriaResponseDTO> categorias = categoriaRepository.findAll()
                 .stream().map(CategoriaResponseDTO::new).toList();
@@ -30,6 +32,7 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public CategoriaResponseDTO save(Categoria categoria) {
         if (categoriaRepository.existsByNomeIgnoreCase(categoria.getNome())) {
             throw new DataIntegrityViolationException("A categoria '" + categoria.getNome() + "' já existe!");
@@ -39,6 +42,7 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public CategoriaResponseDTO updateByNome(String nome, Categoria novoNome) {
         Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada: " + nome));
@@ -49,6 +53,7 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public void deleteByNome(String nome) {
         Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Categoria '" + nome + "' não encontrada."));

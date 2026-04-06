@@ -7,6 +7,8 @@ import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,17 +23,17 @@ public class AtendenteService {
     public AtendenteService(AtendenteRepository atendenteRepository) {
         this.atendenteRepository = atendenteRepository;
     }
-
+    @Cacheable(value = "user", key = "'atendente'")
     public ListWrapper<AtendenteResponseDTO> listAll(){
         List<AtendenteResponseDTO> atendentes = atendenteRepository.findAll()
                 .stream().map(AtendenteResponseDTO::new).toList();
         return new ListWrapper<>(atendentes);
     }
-
     public Atendente buscarEntidadePorNome(String name){
         return atendenteRepository.findByNomeIgnoreCase(name)
                 .orElseThrow(() -> new ObjectNotFoundException("Atendente não encontrado."));
     }
+    @Cacheable(value = "user", key = "'atendente_' + #name")
     public AtendenteResponseDTO buscarPorNome(String name){
         Atendente atendente = atendenteRepository.findByNomeIgnoreCase(name)
                 .orElseThrow(() -> new ObjectNotFoundException("Atendente não encontrado."));
@@ -42,11 +44,13 @@ public class AtendenteService {
         return atendenteRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Atendente não encontrado com Id "+ id));
     }
+    @Cacheable(value = "atendentes", key = "'pedidos_atendente_' + #atendente.id")
     public ListWrapper<PedidoResponseDTO> listarPedidosDoAtendente(Atendente atendente){
         List<PedidoResponseDTO> atendentePedidos = atendente.getPedidos().stream().map(PedidoResponseDTO::new).toList();
         return new ListWrapper<>(atendentePedidos);
     }
     @Transactional
+    @CacheEvict(value = "user", allEntries = true)
     public AtendenteResponseDTO saveAtendente(Atendente atendente){
         if (atendenteRepository.existsByNomeIgnoreCase(atendente.getNome())) {
             throw new DataIntegrityViolationException("Já existe um atendente com esse nome!");
@@ -56,6 +60,7 @@ public class AtendenteService {
     }
 
     @Transactional
+    @CacheEvict(value = "user", allEntries = true)
     public AtendenteResponseDTO updateAtendenteByName(String name, AtendenteRequestDTO dto) {
         Atendente atendenteExistente = buscarEntidadePorNome(name);
 
@@ -67,6 +72,7 @@ public class AtendenteService {
     }
 
     @Transactional
+    @CacheEvict(value = "user", allEntries = true)
     public void deleteUser(String name) {
         Atendente atendente = buscarEntidadePorNome(name);
         atendenteRepository.delete(atendente);

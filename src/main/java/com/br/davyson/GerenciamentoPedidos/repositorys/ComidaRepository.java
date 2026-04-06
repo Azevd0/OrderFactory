@@ -16,6 +16,4 @@ public interface ComidaRepository extends JpaRepository<Comida, Long> {
     Optional<Comida> findByNomeIgnoreCase(String nome);
     boolean existsByNomeIgnoreCase(String name);
     boolean existsByCategoria(Categoria categoria);
-    @Query("Select c FROM Comida c")
-    List<Comida> showMenu();
 }

@@ -9,6 +9,8 @@ import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +26,12 @@ public class ComidaService {
         this.comidaRepository = comidaRepository;
         this.categoriaRepository = categoriaRepository;
     }
-
+    @Cacheable(value = "cardapio", key = "'menu_completo'")
     public ListWrapper<ComidaResponseDTO> openMenu(){
-        List<ComidaResponseDTO> cardapio = comidaRepository.showMenu().stream().map(ComidaResponseDTO::new).toList();
+        List<ComidaResponseDTO> cardapio = comidaRepository.findAll().stream().map(ComidaResponseDTO::new).toList();
         return new ListWrapper<>(cardapio);
     }
-
+    @Cacheable(value = "cardapio", key = "'busca_nome_' + #nome")
     public ListWrapper<ComidaResponseDTO> findComida(String nome) {
         List<ComidaResponseDTO> comida = comidaRepository.findByNomeContainingIgnoreCase(nome).stream()
                 .map(ComidaResponseDTO::new)
@@ -44,7 +46,7 @@ public class ComidaService {
         return comidaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Comida não encontrada."));
     }
-
+    @Cacheable(value = "cardapio", key = "'busca_categoria_' + #nome")
     public ListWrapper<ComidaResponseDTO> findComidaByCategoria(String nome){
         List<ComidaResponseDTO> foodList = comidaRepository.findByCategoriaNomeIgnoreCase(nome)
                 .stream()
@@ -56,6 +58,7 @@ public class ComidaService {
         return new ListWrapper<>(foodList);
     }
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public ComidaResponseDTO saveFood(Comida comida, String categoriaNome) {
         Categoria categoriaExistente = categoriaRepository.findByNomeIgnoreCase(categoriaNome)
                 .orElseThrow(() -> new ObjectNotFoundException(
@@ -69,6 +72,7 @@ public class ComidaService {
     }
 
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public ComidaResponseDTO updateFood(String nome, ComidaRequestDTO comidaAtualizada) {
         Comida comidaExistente = comidaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nome + "' não encontrada para atualização."));
@@ -81,6 +85,7 @@ public class ComidaService {
        return new ComidaResponseDTO(comidaExistente);
     }
     @Transactional
+    @CacheEvict(value = "cardapio", allEntries = true)
     public void deleteFood(String nome) {
         Comida comida = comidaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Não foi possível deletar: Comida '" + nome + "' não encontrada."));

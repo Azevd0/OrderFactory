@@ -5,6 +5,7 @@ import com.br.davyson.GerenciamentoPedidos.entitys.Comanda;
 import com.br.davyson.GerenciamentoPedidos.enums.Periodo;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComandaRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class ComandaService {
     public ComandaService(ComandaRepository comandaRepository) {
         this.comandaRepository = comandaRepository;
     }
-
+    @Cacheable(value = "historico", key = "#periodo.name()")
     public ListWrapper<ComandaDTO> listarHistorico(Periodo periodo) {
         LocalDateTime dataLimite = switch (periodo) {
             case HOJE -> LocalDate.now().atStartOfDay();
