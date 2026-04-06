@@ -8,6 +8,10 @@ import com.br.davyson.GerenciamentoPedidos.enums.BandeiraCartao;
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.*;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +41,10 @@ public class PedidoService {
     }
 
     @Transactional
+    @CacheEvict(value = "pedidos", allEntries = true)
     public PedidoResponseDTO lancarPedido(PedidoRequestDTO dto) {
         String nomeUsuario = "José Eduardo";
-        Atendente atendente = atendenteService.buscarPorNome(nomeUsuario);
+        Atendente atendente = atendenteService.buscarEntidadePorNome(nomeUsuario);
 
         if (pedidoRepository.existsByMesa(dto.numeroMesa())) {
             throw new DataIntegrityViolationException("A Mesa " + dto.numeroMesa() + " já possui um pedido em aberto!");
@@ -54,7 +59,6 @@ public class PedidoService {
         novoPedido.setMesa(dto.numeroMesa());
         novoPedido.setComidas(comidas);
         novoPedido.setObservacao(dto.observacao());
-        novoPedido.setStatusPagamento(false);
 
         Pedido pedidoSalvo = pedidoRepository.save(novoPedido);
 
@@ -62,46 +66,58 @@ public class PedidoService {
             comanda.setMesa(pedidoSalvo.getMesa());
             comanda.setAtendenteNome(atendente.getNome());
             comanda.setComidaNome(comidas.stream().map(Comida::getNome).toList());
+            comanda.setObservacao(dto.observacao());
             comandaRepository.save(comanda);
 
 
         return new PedidoResponseDTO(pedidoSalvo);
     }
     @Transactional
-    public PedidoResponseDTO adicionarComida(Integer mesa, String nomeComida) {
-        Pedido pedido = buscarPorMesa(mesa);
+    @Caching(evict = {
+            @CacheEvict(value = "pedidos", key = "#mesa"),
+            @CacheEvict(value = "pedidos", key = "'pendentes'")
+    })
+    public PedidoResponseDTO adicionarComida(Integer mesa, String comidaNome, String observacao) {
+        Pedido pedido = buscarEntidadePorMesa(mesa);
 
-        if (pedido.getStatusPagamento()) {
-            throw new DataIntegrityViolationException("Não é possível adicionar itens. O pedido da mesa " + mesa + " já está fechado.");
-        }
-            Comida novaComida = comidaRepository.findByNomeIgnoreCase(nomeComida)
-                    .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nomeComida + "' não encontrada no cardápio."));
+            Comida novaComida = comidaRepository.findByNomeIgnoreCase(comidaNome)
+                    .orElseThrow(() -> new ObjectNotFoundException("Comida '" + comidaNome + "' não encontrada no cardápio."));
 
             pedido.getComidas().add(novaComida);
             Comanda comanda = new Comanda();
             comanda.setMesa(pedido.getMesa());
             comanda.setAtendenteNome(pedido.getAtendente().getNome());
             comanda.getComidaNome().add(novaComida.getNome());
+            comanda.setObservacao(observacao);
             comandaRepository.save(comanda);
 
         return new PedidoResponseDTO(pedidoRepository.save(pedido));
 }
 
-
-    public Pedido buscarPorMesa(Integer mesa) {
+    public Pedido buscarEntidadePorMesa(Integer mesa) {
         return pedidoRepository.findByMesa(mesa)
                 .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado para a mesa " + mesa));
     }
 
-    public List<PedidoResponseDTO> buscarPedidosPendentes(){
-        return pedidoRepository.findByStatusPagamentoFalse().stream()
+    @Cacheable(value = "pedidos", key = "#mesa")
+    public PedidoResponseDTO buscarDTOPorMesa(Integer mesa) {
+        return pedidoRepository.findByMesa(mesa)
+                .map(PedidoResponseDTO::new)
+                .orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado para a mesa " + mesa));
+    }
+
+    @Cacheable(value = "pedidos", key = "'pendentes'")
+    public ListWrapper<PedidoResponseDTO> buscarPedidosPendentes(){
+        List<PedidoResponseDTO> pedidos = pedidoRepository.findAll().stream()
                 .map(PedidoResponseDTO::new)
                 .toList();
+        return new ListWrapper<>(pedidos);
     }
     @Transactional
+    @CacheEvict(value = "pedidos", allEntries = true)
     public PedidoResponseDTO transferirComida(Integer mesaOrigem, Integer mesaDestino, String nomeComida) {
-        Pedido pedidoOrigem = buscarPorMesa(mesaOrigem);
-        Pedido pedidoDestino = buscarPorMesa(mesaDestino);
+        Pedido pedidoOrigem = buscarEntidadePorMesa(mesaOrigem);
+        Pedido pedidoDestino = buscarEntidadePorMesa(mesaDestino);
 
         Comida comidaTransferida = pedidoOrigem.getComidas().stream()
                 .filter(c -> c.getNome().equalsIgnoreCase(nomeComida))
@@ -119,15 +135,20 @@ public class PedidoService {
 
 
     @Transactional
+    @CacheEvict(value = "pedidos", allEntries = true)
     public PedidoResponseDTO alterarMesa(Integer mesaAtual, Integer novaMesa) {
-        Pedido pedido = buscarPorMesa(mesaAtual);
+        Pedido pedido = buscarEntidadePorMesa(mesaAtual);
         pedido.setMesa(novaMesa);
         return new PedidoResponseDTO(pedidoRepository.save(pedido));
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "historico_financeiro", allEntries = true),
+            @CacheEvict(value = "pedidos", allEntries = true)
+    })
     public Object registrarPagamento(Integer mesa, BigDecimal valorRecebido,Long cartaoId, FormaPagamento formaDePagamento, Integer qtdPessoas, String senhaCartao) {
-        Pedido pedido = buscarPorMesa(mesa);
+        Pedido pedido = buscarEntidadePorMesa(mesa);
 
         if (qtdPessoas == null || qtdPessoas <= 0) {qtdPessoas = 1;}
         BandeiraCartao bandeiraDoCartao = null;
@@ -156,7 +177,6 @@ public class PedidoService {
         BigDecimal totalPago = pedido.getValorPago();
 
         if (totalPago.compareTo(subtotalSemTaxa) >= 0) {
-            pedido.setStatusPagamento(true);
             Recibo recibo = new Recibo(pedido, formaDePagamento);
             recibo.setBandeiraCartao(bandeiraDoCartao);
             BigDecimal media = totalPago.divide(BigDecimal.valueOf(qtdPessoas), 2, RoundingMode.HALF_UP);
@@ -173,9 +193,11 @@ public class PedidoService {
     }
 
     @Transactional
+    @CacheEvict(value = "pedidos", allEntries = true)
     public void cancelarComida(Integer mesa, String comidaNome){
-        Pedido pedido = buscarPorMesa(mesa);
+        Pedido pedido = buscarEntidadePorMesa(mesa);
         Comida comidaCancelada = comidaService.findComidaByName(comidaNome);
         pedido.getComidas().remove(comidaCancelada);
+        pedidoRepository.save(pedido);
     }
 }

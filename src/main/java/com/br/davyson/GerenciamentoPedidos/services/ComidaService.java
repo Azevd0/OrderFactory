@@ -1,11 +1,13 @@
 package com.br.davyson.GerenciamentoPedidos.services;
 
 import com.br.davyson.GerenciamentoPedidos.dto.ComidaRequestDTO;
+import com.br.davyson.GerenciamentoPedidos.dto.ComidaResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Categoria;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -23,34 +25,38 @@ public class ComidaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<Comida> openMenu(){
-        return comidaRepository.findAll();
+    public ListWrapper<ComidaResponseDTO> openMenu(){
+        List<ComidaResponseDTO> cardapio = comidaRepository.showMenu().stream().map(ComidaResponseDTO::new).toList();
+        return new ListWrapper<>(cardapio);
     }
 
-    public List<Comida> findComida(String nome) {
-        List<Comida> resultados = comidaRepository.findByNomeContainingIgnoreCase(nome);
-        if (resultados.isEmpty()) {
+    public ListWrapper<ComidaResponseDTO> findComida(String nome) {
+        List<ComidaResponseDTO> comida = comidaRepository.findByNomeContainingIgnoreCase(nome).stream()
+                .map(ComidaResponseDTO::new)
+                .toList();
+
+        if (comida.isEmpty()) {
             throw new ObjectNotFoundException("Nenhuma comida encontrada com o termo: " + nome);
         }
-        return resultados;
+        return new ListWrapper<>(comida);
     }
     public Comida findComidaByName(String nome) {
         return comidaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Comida não encontrada."));
     }
-    public Comida findById(Long id) {
-        return comidaRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Comida não encontrada com ID: " + id));
-    }
-    public List<Comida> findComidaByCategoria(String nome){
-        List<Comida> foodList = comidaRepository.findByCategoriaNomeIgnoreCase(nome);
+
+    public ListWrapper<ComidaResponseDTO> findComidaByCategoria(String nome){
+        List<ComidaResponseDTO> foodList = comidaRepository.findByCategoriaNomeIgnoreCase(nome)
+                .stream()
+                .map(ComidaResponseDTO::new)
+                .toList();
         if(foodList.isEmpty()){
-            throw new ObjectNotFoundException("Categoria sem comidas cadastradas");
+            throw new ObjectNotFoundException("Categoria " +nome+ " não existe");
         }
-        return foodList;
+        return new ListWrapper<>(foodList);
     }
     @Transactional
-    public Comida saveFood(Comida comida, String categoriaNome) {
+    public ComidaResponseDTO saveFood(Comida comida, String categoriaNome) {
         Categoria categoriaExistente = categoriaRepository.findByNomeIgnoreCase(categoriaNome)
                 .orElseThrow(() -> new ObjectNotFoundException(
                         "Não foi possível cadastrar: A categoria '" + categoriaNome + "' não foi encontrada!"));
@@ -58,11 +64,12 @@ public class ComidaService {
             throw new DataIntegrityViolationException("A comida '" + comida.getNome() + "' já existe!");
         }
         comida.setCategoria(categoriaExistente);
-        return comidaRepository.save(comida);
+        comidaRepository.save(comida);
+        return new ComidaResponseDTO(comida);
     }
 
     @Transactional
-    public Comida updateFood(String nome, ComidaRequestDTO comidaAtualizada) {
+    public ComidaResponseDTO updateFood(String nome, ComidaRequestDTO comidaAtualizada) {
         Comida comidaExistente = comidaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nome + "' não encontrada para atualização."));
 
@@ -70,7 +77,8 @@ public class ComidaService {
         if (comidaAtualizada.descricao() != null) comidaExistente.setDescricao(comidaAtualizada.descricao());
         if (comidaAtualizada.preco() != null) comidaExistente.setPreco(comidaAtualizada.preco());
 
-        return comidaRepository.save(comidaExistente);
+       comidaRepository.save(comidaExistente);
+       return new ComidaResponseDTO(comidaExistente);
     }
     @Transactional
     public void deleteFood(String nome) {

@@ -1,9 +1,11 @@
 package com.br.davyson.GerenciamentoPedidos.services;
 
+import com.br.davyson.GerenciamentoPedidos.dto.CategoriaResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Categoria;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -21,35 +23,29 @@ public class CategoriaService {
         this.comidaRepository = comidaRepository;
     }
 
-    public List<Categoria> ListAll() {
-        return categoriaRepository.findAll();
-    }
-
-    public Categoria findById(Long id) {
-        return categoriaRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada! ID: " + id));
-    }
-
-    public Categoria findByNome(String nome) {
-        return categoriaRepository.findByNomeIgnoreCase(nome)
-                .orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada! Nome: " + nome));
+    public ListWrapper<CategoriaResponseDTO> ListAll() {
+        List<CategoriaResponseDTO> categorias = categoriaRepository.findAll()
+                .stream().map(CategoriaResponseDTO::new).toList();
+        return new ListWrapper<>(categorias);
     }
 
     @Transactional
-    public Categoria save(Categoria categoria) {
+    public CategoriaResponseDTO save(Categoria categoria) {
         if (categoriaRepository.existsByNomeIgnoreCase(categoria.getNome())) {
             throw new DataIntegrityViolationException("A categoria '" + categoria.getNome() + "' já existe!");
         }
-        return categoriaRepository.save(categoria);
+        categoriaRepository.save(categoria);
+        return new CategoriaResponseDTO(categoria);
     }
 
     @Transactional
-    public Categoria updateByNome(String nome, Categoria novoNome) {
+    public CategoriaResponseDTO updateByNome(String nome, Categoria novoNome) {
         Categoria categoria = categoriaRepository.findByNomeIgnoreCase(nome)
                 .orElseThrow(() -> new ObjectNotFoundException("Categoria não encontrada: " + nome));
         categoria.setNome(novoNome.getNome());
 
-        return categoriaRepository.save(categoria);
+        categoriaRepository.save(categoria);
+        return new CategoriaResponseDTO(categoria);
     }
 
     @Transactional

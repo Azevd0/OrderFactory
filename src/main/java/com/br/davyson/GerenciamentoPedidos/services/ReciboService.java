@@ -4,6 +4,8 @@ import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Recibo;
 import com.br.davyson.GerenciamentoPedidos.enums.Periodo;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ReciboRepository;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,14 +21,20 @@ public class ReciboService {
         this.reciboRepository = reciboRepository;
     }
 
-    public List<ReciboResponseDTO> listarHistorico(Periodo periodo) {
+    @Cacheable(value = "historico_financeiro", key = "#periodo")
+    public ListWrapper<ReciboResponseDTO> listarHistorico(Periodo periodo) {
         LocalDateTime dataLimite = switch (periodo) {
             case HOJE -> LocalDate.now().atStartOfDay();
             case ESTA_SEMANA -> LocalDateTime.now().minusWeeks(1);
             case ESTA_QUINZENA -> LocalDateTime.now().minusWeeks(2);
             case ESTE_MES -> LocalDateTime.now().minusMonths(1);
         };
-        return reciboRepository.findByDataFechamentoAfter(dataLimite).stream().map(ReciboResponseDTO::new).toList();
+        List<ReciboResponseDTO> listaRecibos = reciboRepository.findByDataFechamentoAfter(dataLimite)
+                .stream()
+                .map(ReciboResponseDTO::new)
+                .toList();
+
+        return new ListWrapper<>(listaRecibos);
     }
 
     private BigDecimal somarPorPeriodo(LocalDateTime data) {
@@ -34,8 +42,10 @@ public class ReciboService {
                 .stream()
                 .map(Recibo::getValorTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
     }
 
+    @Cacheable(value = "historico_financeiro", key = "'faturamento'", unless = "#result == null || #result.hoje == T(java.math.BigDecimal).ZERO")
     public FaturamentoResponseDTO calcularFaturamento() {
         BigDecimal hoje = somarPorPeriodo(LocalDate.now().atStartOfDay());
         BigDecimal semana = somarPorPeriodo(LocalDateTime.now().minusWeeks(1));

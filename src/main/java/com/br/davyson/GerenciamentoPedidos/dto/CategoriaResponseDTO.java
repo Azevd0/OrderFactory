@@ -2,10 +2,17 @@ package com.br.davyson.GerenciamentoPedidos.dto;
 
 import com.br.davyson.GerenciamentoPedidos.entitys.Categoria;
 
-public record CategoriaResponseDTO (Long id, String nome){
+public class CategoriaResponseDTO {
+    private Long id;
+    private String nome;
 
-    public CategoriaResponseDTO(Categoria categoria){
-       this(categoria.getId(), categoria.getNome());
+    public CategoriaResponseDTO() {}
+
+    public CategoriaResponseDTO(Categoria categoria) {
+        this.id = categoria.getId();
+        this.nome = categoria.getNome();
     }
 
+    public Long getId() { return id; }
+    public String getNome() { return nome; }
 }

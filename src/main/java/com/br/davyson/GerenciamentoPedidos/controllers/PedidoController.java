@@ -2,16 +2,16 @@ package com.br.davyson.GerenciamentoPedidos.controllers;
 
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoRequestDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoResponseDTO;
-import com.br.davyson.GerenciamentoPedidos.entitys.Pedido;
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
 import com.br.davyson.GerenciamentoPedidos.services.PedidoService;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 import java.math.BigDecimal;
 
 @RestController
@@ -24,17 +24,17 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @Operation(summary = "Listar todos os pedidos pendentes (Não pagos)")
+    @Operation(summary = "Listar todos os pedidos pendentes")
     @GetMapping("/pendencias")
-    public ResponseEntity<List<PedidoResponseDTO>> listarPendentes() {
+    public ResponseEntity<ListWrapper<PedidoResponseDTO>> listarPendentes() {
         return ResponseEntity.ok(pedidoService.buscarPedidosPendentes());
     }
 
     @Operation(summary = "Buscar pedido de uma mesa específica")
     @GetMapping("/buscar-mesa/{mesa}")
     public ResponseEntity<PedidoResponseDTO> buscarPorMesa(@PathVariable Integer mesa) {
-        Pedido pedido = pedidoService.buscarPorMesa(mesa);
-        return ResponseEntity.ok(new PedidoResponseDTO(pedido));
+        PedidoResponseDTO pedido = pedidoService.buscarDTOPorMesa(mesa);
+        return ResponseEntity.ok(pedido);
     }
 
     @Operation(summary = "Lançar pedido")
@@ -63,19 +63,20 @@ public class PedidoController {
     @PatchMapping("/adicionar/{mesa}/{nomeComida}")
     public ResponseEntity<PedidoResponseDTO> adicionarItem(
             @PathVariable Integer mesa,
-            @PathVariable String nomeComida) {
-        return ResponseEntity.ok(pedidoService.adicionarComida(mesa, nomeComida));
+            @PathVariable String nomeComida,
+            @RequestParam(defaultValue = "''", value = "observacao") String observacao) {
+        return ResponseEntity.ok(pedidoService.adicionarComida(mesa, nomeComida, observacao));
     }
 
     @Operation(summary = "Registrar pagamento")
     @PatchMapping("/pagamento/{mesa}")
-    public ResponseEntity<Object> registrarPagamento(@PathVariable Integer mesa, @RequestParam(defaultValue = "0") Long cartaoId,
-                                                     @RequestParam BigDecimal valor, @RequestParam FormaPagamento modalidade
-            ,@RequestParam String senhaCartao, @RequestParam(defaultValue = "1") Integer qtdPessoas) {
+    public ResponseEntity<Object> registrarPagamento(@PathVariable Integer mesa, @RequestParam(value = "cartaoId", defaultValue = "0") Long cartaoId,
+                                                     @RequestParam(value = "valor") BigDecimal valor, @RequestParam(value = "modalidade") FormaPagamento modalidade
+            ,@RequestParam(value = "cartaoSenha", defaultValue = "''") String senhaCartao, @RequestParam(value = "qtdPessoas", defaultValue = "1") Integer qtdPessoas) {
         Object pedidoFechado = pedidoService.registrarPagamento(mesa, valor,cartaoId, modalidade, qtdPessoas, senhaCartao);
         return ResponseEntity.ok(pedidoFechado);
     }
-
+    //http://localhost:9090/pedidos/pagamento/61?cartaoId=0&valor=200.09&modalidade=PIX&cartaoSenha=''&qtdPessoas=3
     @Operation(summary = "Remover um item específico do pedido")
     @DeleteMapping("/{mesa}/remover-item")
     public ResponseEntity<Void> removerItem(

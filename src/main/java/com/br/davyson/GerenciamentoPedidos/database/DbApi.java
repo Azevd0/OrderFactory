@@ -10,7 +10,6 @@ import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CartaoClienteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.ComidaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

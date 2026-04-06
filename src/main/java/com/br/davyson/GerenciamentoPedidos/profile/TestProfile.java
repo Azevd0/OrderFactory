@@ -11,8 +11,11 @@ import org.springframework.context.annotation.Profile;
 @Profile("test")
 public class TestProfile {
 
-    @Autowired
     public DbApi dbApi;
+
+    public TestProfile(DbApi dbApi) {
+        this.dbApi = dbApi;
+    }
 
     @Bean
     public CommandLineRunner instanciarMenu() {

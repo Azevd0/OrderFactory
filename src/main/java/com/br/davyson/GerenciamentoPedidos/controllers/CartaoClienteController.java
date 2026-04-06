@@ -2,6 +2,7 @@ package com.br.davyson.GerenciamentoPedidos.controllers;
 
 import com.br.davyson.GerenciamentoPedidos.dto.CartaoClienteResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.services.CartaoClienteService;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class CartaoClienteController {
     }
     @Operation(summary = "Listar todos os cartões cadastrados")
     @GetMapping
-    public ResponseEntity<List<CartaoClienteResponseDTO>> listar() {
-        return ResponseEntity.ok(service.listarTodos());
+    public ResponseEntity<ListWrapper<CartaoClienteResponseDTO>> listar() {
+        return ResponseEntity.ok(service.listarCartoes());
     }
 
     @Operation(summary = "Buscar um cartão específico pelo ID")

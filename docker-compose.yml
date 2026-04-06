@@ -1,0 +1,8 @@
+services:
+  redis:
+    image: redis:7.4.2-alpine
+    container_name: redis_pedidos
+    profiles: ["test"]
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

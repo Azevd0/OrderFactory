@@ -4,6 +4,7 @@ import com.br.davyson.GerenciamentoPedidos.dto.FaturamentoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.ReciboResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.enums.Periodo;
 import com.br.davyson.GerenciamentoPedidos.services.ReciboService;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/recibo")
@@ -32,7 +31,7 @@ public class ReciboController {
 
     @Operation(summary = "Filtrar histórico por período")
     @GetMapping("/historico-de-vendas")
-    public ResponseEntity<List<ReciboResponseDTO>> obterHistorico(
+    public ResponseEntity<ListWrapper<ReciboResponseDTO>> obterHistorico(
             @RequestParam Periodo periodo) {
         return ResponseEntity.ok(reciboService.listarHistorico(periodo));
     }

@@ -1,7 +1,6 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
 import com.br.davyson.GerenciamentoPedidos.dto.PedidoRequestDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -34,7 +33,6 @@ public class Pedido {
     private List<Comida> comidas = new ArrayList<>();
     private String observacao;
     private BigDecimal valorPago = BigDecimal.ZERO;
-    private boolean statusPagamento;
     @Column(nullable = false, updatable = false)
     private LocalDateTime data = LocalDateTime.now();
 
@@ -64,7 +62,6 @@ public class Pedido {
         this.mesa = dto.numeroMesa();
         this.atendente = atendente;
         this.observacao = dto.observacao();
-        this.statusPagamento = false;
         this.comidas = new ArrayList<>();
     }
 
@@ -96,14 +93,6 @@ public class Pedido {
     public List<Comida> getComidas() { return comidas; }
     public void setComidas(List<Comida> comidas) { this.comidas = comidas; }
 
-    public boolean getStatusPagamento() {
-        return statusPagamento;
-    }
-
-    public void setStatusPagamento(boolean statusPagamento) {
-        this.statusPagamento = statusPagamento;
-    }
-
     public LocalDateTime getData() {
         return this.data;
     }
@@ -119,12 +108,12 @@ public class Pedido {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Pedido pedido = (Pedido) o;
-        return statusPagamento == pedido.statusPagamento && Objects.equals(id, pedido.id) && Objects.equals(mesa, pedido.mesa) && Objects.equals(atendente, pedido.atendente) && Objects.equals(versao, pedido.versao) && Objects.equals(comidas, pedido.comidas) && Objects.equals(observacao, pedido.observacao) && Objects.equals(valorPago, pedido.valorPago) && Objects.equals(data, pedido.data);
+        return Objects.equals(id, pedido.id) && Objects.equals(mesa, pedido.mesa) && Objects.equals(atendente, pedido.atendente) && Objects.equals(versao, pedido.versao) && Objects.equals(comidas, pedido.comidas) && Objects.equals(observacao, pedido.observacao) && Objects.equals(valorPago, pedido.valorPago) && Objects.equals(data, pedido.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mesa, atendente, versao, comidas, observacao, valorPago, statusPagamento, data);
+        return Objects.hash(id, mesa, atendente, versao, comidas, observacao, valorPago, data);
     }
 }
 

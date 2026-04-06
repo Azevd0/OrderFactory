@@ -1,6 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,19 +16,18 @@ public class Comanda {
     private Long id;
 
     private Integer mesa;
-
     private String atendenteNome;
 
-
     private List<String> comidaNome = new ArrayList<>();
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private String observacao;
     private LocalDateTime dataLancamento = LocalDateTime.now();
 
-    public Comanda(Long id, Integer mesa, Atendente atendente, List<Comida> comida, LocalDateTime dataLancamento) {
+    public Comanda(Long id, Integer mesa, Atendente atendente, List<Comida> comida, String observacao, LocalDateTime dataLancamento) {
         this.id = id;
         this.mesa = mesa;
         this.atendenteNome = atendente.getNome();
         this.comidaNome = comida.stream().map(Comida::getNome).toList();
+        this.observacao = observacao;
         this.dataLancamento = dataLancamento;
     }
     public Comanda(){}
@@ -62,6 +62,14 @@ public class Comanda {
 
     public void setComidaNome(List<String> comidaNome) {
         this.comidaNome = comidaNome;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
     }
 
     public LocalDateTime getDataLancamento() {

@@ -4,6 +4,7 @@ import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
 import com.br.davyson.GerenciamentoPedidos.services.AtendenteService;
 import com.br.davyson.GerenciamentoPedidos.dto.AtendenteResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.dto.AtendenteRequestDTO;
+import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,25 +27,22 @@ public class AtendenteController {
 
     @Operation(summary = "Listar todos os atendentes")
     @GetMapping
-    public ResponseEntity<List<AtendenteResponseDTO>> listarTodos() {
-        List<AtendenteResponseDTO> list = atendenteService.listAll()
-                .stream()
-                .map(AtendenteResponseDTO::new)
-                .toList();
+    public ResponseEntity<ListWrapper<AtendenteResponseDTO>> listarTodos() {
+        ListWrapper<AtendenteResponseDTO> list = atendenteService.listAll();
         return ResponseEntity.ok(list);
     }
 
     @Operation(summary = "Buscar atendente por nome")
     @GetMapping("/busca/{nome}")
     public ResponseEntity<AtendenteResponseDTO> buscarPorNome(@PathVariable String nome) {
-        Atendente atendente = atendenteService.buscarPorNome(nome);
-        return ResponseEntity.ok(new AtendenteResponseDTO(atendente));
+        return ResponseEntity.ok(atendenteService.buscarPorNome(nome));
     }
+    //AtendenteResponseDTO atendente = atendenteService.buscarPorNome(nome);
     @Operation(summary = "Listar pedidos do atendente pelo seu id")
     @GetMapping("/listarPedidos/{id}")
-    public ResponseEntity<List<PedidoResponseDTO>> listarPedidosDoAtendente(@PathVariable Long id){
+    public ResponseEntity<ListWrapper<PedidoResponseDTO>> listarPedidosDoAtendente(@PathVariable Long id){
         Atendente atendete = atendenteService.findById(id);
-        List<PedidoResponseDTO> pedidos = atendenteService.listarPedidosDoAtendente(atendete);
+        ListWrapper<PedidoResponseDTO> pedidos = atendenteService.listarPedidosDoAtendente(atendete);
         return ResponseEntity.ok(pedidos);
     }
     @Operation(summary = "Cadastrar atendente")
@@ -55,15 +53,15 @@ public class AtendenteController {
         atendente.setLogin(dto.login());
         atendente.setSenha(dto.senha());
 
-        Atendente salvo = atendenteService.saveAtendente(atendente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AtendenteResponseDTO(salvo));
+        AtendenteResponseDTO salvo = atendenteService.saveAtendente(atendente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     @Operation(summary = "Atualizar atendente")
     @PutMapping("/atualizacao/{nome}")
     public ResponseEntity<AtendenteResponseDTO> atualizar(@PathVariable String nome, @RequestBody @Valid AtendenteRequestDTO dto) {
-        Atendente atualizado = atendenteService.updateAtendenteByName(nome, dto);
-        return ResponseEntity.ok(new AtendenteResponseDTO(atualizado));
+        AtendenteResponseDTO atualizado = atendenteService.updateAtendenteByName(nome, dto);
+        return ResponseEntity.ok(atualizado);
     }
 
     @Operation(summary = "Remover atendente")
