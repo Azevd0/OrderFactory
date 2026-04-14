@@ -31,7 +31,7 @@ public class AtendenteController {
         return ResponseEntity.ok(atendenteService.buscarPorNome(nome));
     }
     //listará pelo atendente logado
-    @Operation(summary = "Listar pedidos do atendente pelo seu id")
+    @Operation(summary = "Listar pedidos do atendente pelo id")
     @GetMapping("/listarPedidos/{id}")
     public ResponseEntity<ListWrapper<PedidoResponseDTO>> listarPedidosDoAtendente(@PathVariable Long id){
         Atendente atendete = atendenteService.findById(id);
