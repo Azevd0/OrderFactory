@@ -33,14 +33,23 @@ docker compose --profile test down
 Para registro de pagamento na modalidade de cartão, há cartões fictícios instanciados em memória. Confira as senhas de cada um:
 
 Id: 1 | Senha: @#1234
+
 Id: 2 | Senha: @#9876
+
 Id: 3 | Senha: @#5544
+
 Id: 4 | Senha: @#102030
+
 Id: 5 | Senha: @#8899
+
 Id: 6 | Senha: @#1122
+
 Id: 7 | Senha: @#3344
+
 Id: 8 | Senha: @#5566
+
 Id: 9 | Senha: @#7788
+
 Id: 10 | Senha: @#9966
 
  
