@@ -29,5 +29,19 @@ docker compose --profile test down
   <img width=50% alt="image" src="https://github.com/user-attachments/assets/15605e33-1f6a-41a5-a019-c1a5537a40f6" />
 </div>
 
+## Cartões
+Para registro de pagamento na modalidade de cartão, há cartões fictícios instanciados em memória. Confira as senhas de cada um:
+
+Id: 1 | Senha: @#1234
+Id: 2 | Senha: @#9876
+Id: 3 | Senha: @#5544
+Id: 4 | Senha: @#102030
+Id: 5 | Senha: @#8899
+Id: 6 | Senha: @#1122
+Id: 7 | Senha: @#3344
+Id: 8 | Senha: @#5566
+Id: 9 | Senha: @#7788
+Id: 10 | Senha: @#9966
+
  
 
