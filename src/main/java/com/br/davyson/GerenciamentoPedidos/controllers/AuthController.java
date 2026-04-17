@@ -56,7 +56,7 @@ public class AuthController {
         atendente.setSenha(passwordEncoder.encode(dto.senha()));
         atendente.setRole(cargo);
 
-        AtendenteRegisterResponse salvo = atendenteService.saveAtendente(atendente);
+        AtendenteRegisterResponse salvo = atendenteService.registrarAtendente(atendente);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 }

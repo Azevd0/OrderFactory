@@ -1,9 +1,9 @@
 package com.br.davyson.GerenciamentoPedidos.services;
 
-import com.br.davyson.GerenciamentoPedidos.dto.request.AtendenteRegisterRequest;
 import com.br.davyson.GerenciamentoPedidos.dto.response.AtendenteRegisterResponse;
 import com.br.davyson.GerenciamentoPedidos.dto.response.PedidoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
+import com.br.davyson.GerenciamentoPedidos.enums.Role;
 import com.br.davyson.GerenciamentoPedidos.exceptions.ObjectNotFoundException;
 import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.wrapper.ListWrapper;
@@ -39,6 +39,11 @@ public class AtendenteService {
                 .orElseThrow(() -> new ObjectNotFoundException("Atendente não encontrado."));
         return new AtendenteRegisterResponse(atendente);
     }
+    public ListWrapper<AtendenteRegisterResponse> listarTodosOsAtendentes(){
+        List<AtendenteRegisterResponse> listaDeAtendentes = atendenteRepository.findAll()
+                .stream().map(AtendenteRegisterResponse::new).toList();
+        return new ListWrapper<>(listaDeAtendentes);
+    }
 
     public Atendente findById(Long id){
         return atendenteRepository.findById(id)
@@ -51,7 +56,7 @@ public class AtendenteService {
     }
     @Transactional
     @CacheEvict(value = "user", allEntries = true)
-    public AtendenteRegisterResponse saveAtendente(Atendente atendente){
+    public AtendenteRegisterResponse registrarAtendente(Atendente atendente){
         if (atendenteRepository.existsByNomeIgnoreCase(atendente.getNome())) {
             throw new DataIntegrityViolationException("Já existe um atendente com esse nome!");
         }
@@ -65,20 +70,18 @@ public class AtendenteService {
 
     @Transactional
     @CacheEvict(value = "user", allEntries = true)
-    public AtendenteRegisterResponse updateAtendenteByName(String name, AtendenteRegisterRequest dto) {
-        Atendente atendenteExistente = buscarEntidadePorNome(name);
-
-        if (dto.nome() != null) atendenteExistente.setNome(dto.nome());
-        if (dto.senha() != null) atendenteExistente.setSenha(dto.senha());
-
-        atendenteRepository.save(atendenteExistente);
-        return new AtendenteRegisterResponse(atendenteExistente);
+    public AtendenteRegisterResponse promoverAtendente(Long id, Role cargo){
+        Atendente atendentePromovido = atendenteRepository.findById(id)
+                .orElseThrow(()-> new UsernameNotFoundException("Atentende não encontrado"));
+        atendentePromovido.setRole(cargo);
+        return new AtendenteRegisterResponse(atendentePromovido);
     }
 
     @Transactional
     @CacheEvict(value = "user", allEntries = true)
-    public void deleteUser(String name) {
-        Atendente atendente = buscarEntidadePorNome(name);
+    public void deleteUser(Long id) {
+        Atendente atendente = atendenteRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Atendente não encontrado para remoção"));
         atendenteRepository.delete(atendente);
     }
 }

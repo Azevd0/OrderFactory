@@ -1,8 +1,10 @@
 package com.br.davyson.GerenciamentoPedidos.entitys;
 
 import com.br.davyson.GerenciamentoPedidos.enums.BandeiraCartao;
-import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
+import com.br.davyson.GerenciamentoPedidos.enums.ModalidadaCartao;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
@@ -14,13 +16,15 @@ public class CartaoCliente {
     private Long id;
     @Enumerated(EnumType.STRING)
     private BandeiraCartao bandeiraCartao;
-    private FormaPagamento formaPagamento;
+    private ModalidadaCartao formaPagamento;
+    @NotNull(message = "O cartão deve ter um saldo")
     private BigDecimal saldo;
+    @Size(min = 4, max = 6, message = "A senha deve ter entre 4 e 6 caracteres")
     private String senha;
 
     public CartaoCliente(){}
 
-    public CartaoCliente(Long id, BandeiraCartao bandeiraCartao, FormaPagamento formaPagamento, BigDecimal saldo, String senha) {
+    public CartaoCliente(Long id, BandeiraCartao bandeiraCartao, ModalidadaCartao formaPagamento, BigDecimal saldo, String senha) {
         this.id = id;
         this.bandeiraCartao = bandeiraCartao;
         this.formaPagamento = formaPagamento;
@@ -44,11 +48,11 @@ public class CartaoCliente {
         this.bandeiraCartao = bandeiraCartao;
     }
 
-    public FormaPagamento getFormaPagamento() {
+    public ModalidadaCartao getFormaPagamento() {
         return formaPagamento;
     }
 
-    public void setFormaPagamento(FormaPagamento formaPagamento) {
+    public void setFormaPagamento(ModalidadaCartao formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 

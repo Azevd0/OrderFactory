@@ -1,12 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.enums;
 
-public enum FormaPagamento {
+public enum ModalidadaCartao {
     CREDITO,
     DEBITO,
-    VOUCHER,
-    PIX,
-    DINHEIRO
-
-
-
+    VOUCHER
 }

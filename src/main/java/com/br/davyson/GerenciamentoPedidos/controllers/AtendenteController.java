@@ -1,6 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.controllers;
 import com.br.davyson.GerenciamentoPedidos.dto.response.PedidoResponseDTO;
 import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
+import com.br.davyson.GerenciamentoPedidos.enums.Role;
 import com.br.davyson.GerenciamentoPedidos.services.AtendenteService;
 import com.br.davyson.GerenciamentoPedidos.dto.response.AtendenteRegisterResponse;
 import com.br.davyson.GerenciamentoPedidos.dto.request.AtendenteRegisterRequest;
@@ -39,19 +40,25 @@ public class AtendenteController {
         return ResponseEntity.ok(pedidos);
     }
 
+    @Operation(summary = "Listar todos os funcionários", description = "!Apenas administradores!")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Atualizar atendente")
-    @PutMapping("/atualizacao/{nome}")
-    public ResponseEntity<AtendenteRegisterResponse> atualizar(@PathVariable String nome, @RequestBody @Valid AtendenteRegisterRequest dto) {
-        AtendenteRegisterResponse atualizado = atendenteService.updateAtendenteByName(nome, dto);
-        return ResponseEntity.ok(atualizado);
+    @GetMapping("/funcionarios")
+    public ResponseEntity<ListWrapper<AtendenteRegisterResponse>> listarTodosOsAtendentes(){
+        return ResponseEntity.ok(atendenteService.listarTodosOsAtendentes());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Remover atendente")
-    @DeleteMapping("/remover/{nome}")
-    public ResponseEntity<Void> deletar(@PathVariable String nome) {
-        atendenteService.deleteUser(nome);
+    @Operation(summary = "Promover atendente", description = "!Apenas administradores!")
+    @PatchMapping("/promover/{id}")
+    public ResponseEntity<AtendenteRegisterResponse> promover(@PathVariable Long id, @RequestParam Role cargo){
+        return ResponseEntity.ok(atendenteService.promoverAtendente(id,cargo));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Remover atendente", description = "!Apenas administradores!")
+    @DeleteMapping("/remover/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        atendenteService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

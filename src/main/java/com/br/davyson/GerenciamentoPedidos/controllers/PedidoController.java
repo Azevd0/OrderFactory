@@ -47,7 +47,7 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Mudar número da mesa do pedido")
+    @Operation(summary = "Mudar número da mesa do pedido", description = "!Apenas administradores!")
     @PutMapping("/alterar-mesa/{atual}/{nova}")
     public ResponseEntity<PedidoResponseDTO> mudarMesa(
             @PathVariable Integer atual,
@@ -55,7 +55,7 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.alterarMesa(atual, nova));
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Transferir um item de uma mesa para outra")
+    @Operation(summary = "Transferir um item de uma mesa para outra", description = "!Apenas administradores!")
     @PatchMapping("/transferir/{origem}/{destino}/{comida}")
     public ResponseEntity<PedidoResponseDTO> transferir(
             @PathVariable Integer origem,
@@ -82,7 +82,7 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoFechado);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Remover um item específico do pedido")
+    @Operation(summary = "Cancelar um item específico do pedido", description = "!Apenas administradores!")
     @DeleteMapping("/{mesa}/remover-item")
     public ResponseEntity<Void> removerItem(
             @PathVariable Integer mesa,

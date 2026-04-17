@@ -12,13 +12,6 @@ public class CartaoClienteResponseDTO {
 
     public CartaoClienteResponseDTO() {}
 
-    public CartaoClienteResponseDTO(Long id, String bandeiraCartao, String modalidade, BigDecimal saldo) {
-        this.id = id;
-        this.bandeiraCartao = bandeiraCartao;
-        this.modalidade = modalidade;
-        this.saldo = saldo;
-    }
-
     public CartaoClienteResponseDTO(CartaoCliente cartaoCliente) {
         this.id = cartaoCliente.getId();
         this.bandeiraCartao = cartaoCliente.getBandeiraCartao() != null ? cartaoCliente.getBandeiraCartao().name() : null;

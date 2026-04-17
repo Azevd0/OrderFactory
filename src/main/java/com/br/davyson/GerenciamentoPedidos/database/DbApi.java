@@ -1,11 +1,11 @@
 package com.br.davyson.GerenciamentoPedidos.database;
 
-import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
 import com.br.davyson.GerenciamentoPedidos.entitys.CartaoCliente;
 import com.br.davyson.GerenciamentoPedidos.entitys.Categoria;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comida;
 import com.br.davyson.GerenciamentoPedidos.enums.BandeiraCartao;
 import com.br.davyson.GerenciamentoPedidos.enums.FormaPagamento;
+import com.br.davyson.GerenciamentoPedidos.enums.ModalidadaCartao;
 import com.br.davyson.GerenciamentoPedidos.repositorys.AtendenteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CartaoClienteRepository;
 import com.br.davyson.GerenciamentoPedidos.repositorys.CategoriaRepository;
@@ -121,16 +121,16 @@ public class DbApi {
     }
 
     public void instanciarCartoes(){
-            CartaoCliente cartao1 = new CartaoCliente(null, BandeiraCartao.VISA, FormaPagamento.CREDITO, new BigDecimal("250.00"), "@#1234");
-            CartaoCliente cartao2 = new CartaoCliente(null, BandeiraCartao.MASTERCARD, FormaPagamento.CREDITO, new BigDecimal("125.40"), "@#9876");
-            CartaoCliente cartao3 = new CartaoCliente(null, BandeiraCartao.ELO, FormaPagamento.DEBITO, new BigDecimal("200.00"), "@#5544");
-            CartaoCliente cartao4 = new CartaoCliente(null, BandeiraCartao.AMERICAN_EXPRESS, FormaPagamento.DEBITO, new BigDecimal("150.00"), "@#102030");
-            CartaoCliente cartao5 = new CartaoCliente(null, BandeiraCartao.ALELO, FormaPagamento.CREDITO, new BigDecimal("340.00"), "@#8899");
-            CartaoCliente cartao6 = new CartaoCliente(null, BandeiraCartao.SODEXO, FormaPagamento.DEBITO, new BigDecimal("500.00"), "@#1122");
-            CartaoCliente cartao7 = new CartaoCliente(null, BandeiraCartao.MAESTRO, FormaPagamento.VOUCHER, new BigDecimal("85.00"), "@#3344");
-            CartaoCliente cartao8 = new CartaoCliente(null, BandeiraCartao.HIPERCARD, FormaPagamento.DEBITO, new BigDecimal("62.00"), "@#5566");
-            CartaoCliente cartao9 = new CartaoCliente(null, BandeiraCartao.DINERS_CLUB, FormaPagamento.VOUCHER, new BigDecimal("70.00"), "@#7788");
-            CartaoCliente cartao10 = new CartaoCliente(null, BandeiraCartao.CABAL, FormaPagamento.CREDITO, new BigDecimal("111.00"), "@#9900");
+            CartaoCliente cartao1 = new CartaoCliente(null, BandeiraCartao.VISA, ModalidadaCartao.CREDITO, new BigDecimal("250.00"), "@#1234");
+            CartaoCliente cartao2 = new CartaoCliente(null, BandeiraCartao.MASTERCARD, ModalidadaCartao.CREDITO, new BigDecimal("125.40"), "@#9876");
+            CartaoCliente cartao3 = new CartaoCliente(null, BandeiraCartao.ELO, ModalidadaCartao.DEBITO, new BigDecimal("200.00"), "@#5544");
+            CartaoCliente cartao4 = new CartaoCliente(null, BandeiraCartao.AMERICAN_EXPRESS, ModalidadaCartao.DEBITO, new BigDecimal("150.00"), "@#1020");
+            CartaoCliente cartao5 = new CartaoCliente(null, BandeiraCartao.ALELO, ModalidadaCartao.CREDITO, new BigDecimal("340.00"), "@#8899");
+            CartaoCliente cartao6 = new CartaoCliente(null, BandeiraCartao.SODEXO, ModalidadaCartao.DEBITO, new BigDecimal("500.00"), "@#1122");
+            CartaoCliente cartao7 = new CartaoCliente(null, BandeiraCartao.MAESTRO, ModalidadaCartao.VOUCHER, new BigDecimal("85.00"), "@#3344");
+            CartaoCliente cartao8 = new CartaoCliente(null, BandeiraCartao.HIPERCARD, ModalidadaCartao.DEBITO, new BigDecimal("62.00"), "@#5566");
+            CartaoCliente cartao9 = new CartaoCliente(null, BandeiraCartao.DINERS_CLUB, ModalidadaCartao.VOUCHER, new BigDecimal("70.00"), "@#7788");
+            CartaoCliente cartao10 = new CartaoCliente(null, BandeiraCartao.CABAL, ModalidadaCartao.CREDITO, new BigDecimal("111.00"), "@#9900");
 
         cartaoClienteRepository.saveAll(List.of(cartao1, cartao2,cartao3,cartao4,cartao5,
                 cartao6, cartao7, cartao8, cartao9, cartao10));

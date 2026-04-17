@@ -48,7 +48,7 @@ public class ComidaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Registrar nova comida")
+    @Operation(summary = "Registrar nova comida", description = "!Apenas administradores!")
     @PostMapping
     public ResponseEntity<ComidaResponseDTO> cadastrar(@RequestParam(value = "categoria") String categoriaNome, @Valid @RequestBody ComidaRequestDTO comida) {
         ComidaResponseDTO novaComida = comidaService.saveFood(comida, categoriaNome);
@@ -56,7 +56,7 @@ public class ComidaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Atualizar comida")
+    @Operation(summary = "Atualizar comida", description = "!Apenas administradores!")
     @PutMapping("/{nome}")
     public ResponseEntity<ComidaResponseDTO> atualizar(@PathVariable String nome, @RequestBody ComidaRequestDTO dto) {
 
@@ -65,7 +65,7 @@ public class ComidaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Excluir Comida")
+    @Operation(summary = "Excluir Comida", description = "!Apenas administradores!")
     @DeleteMapping("/{nome}")
     public ResponseEntity<Void> deletar(@PathVariable String nome) {
         comidaService.deleteFood(nome);

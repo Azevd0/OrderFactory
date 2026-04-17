@@ -32,7 +32,7 @@ public class CategoriaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Registrar nova categoria")
+    @Operation(summary = "Registrar nova categoria", description = "!Apenas administradores!")
     @PostMapping
     public ResponseEntity<CategoriaResponseDTO> cadastrar(@Valid @RequestBody Categoria categoria) {
         CategoriaResponseDTO novaCategoria = service.save(categoria);
@@ -40,7 +40,7 @@ public class CategoriaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Atualizar categoria pelo nome")
+    @Operation(summary = "Atualizar categoria pelo nome", description = "!Apenas administradores!")
     @PutMapping("/{nome}")
     public ResponseEntity<CategoriaResponseDTO> atualizar(@PathVariable String nome, @Valid @RequestBody Categoria categoria) {
         CategoriaResponseDTO categoriaAtualizada = service.updateByNome(nome, categoria);
@@ -48,7 +48,7 @@ public class CategoriaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Excluir categoria")
+    @Operation(summary = "Excluir categoria", description = "!Apenas administradores!")
     @DeleteMapping("/{nome}")
     public ResponseEntity<Void> deletar(@PathVariable String nome) {
         service.deleteByNome(nome);

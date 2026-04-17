@@ -171,7 +171,7 @@ public class PedidoService {
             if (!cartaoUsado.getSenha().equals(senhaCartao)) {
                 throw new RuntimeException("Senha do cartão inválida!");
             }
-            if(!cartaoUsado.getFormaPagamento().equals(formaDePagamento)){
+            if(!cartaoUsado.getFormaPagamento().name().equals(formaDePagamento.name())){
                 throw new RuntimeException("Forma de pagamento inválida!");
             }
             if (valorRecebido.compareTo(cartaoUsado.getSaldo()) > 0) {
