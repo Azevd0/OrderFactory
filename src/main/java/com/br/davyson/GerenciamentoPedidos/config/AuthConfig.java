@@ -16,7 +16,7 @@ public class AuthConfig implements UserDetailsService {
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return atendenteRepository.findByEmail(username)
+        return atendenteRepository.findByEmailIgnoreCase(username)
                 .orElseThrow(()-> new UsernameNotFoundException("Atendente não encontrado"));
     }
 }

@@ -26,6 +26,11 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        String[] publicPaths = {
+                "/auth/login","/auth/registro","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                "/pedidos/pagamento/**", "pedidos/buscar-mesa/**", "/comida", "/comida/nome/**",
+                "/comida/categoria/**", "/categoria"
+        };
         return http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors-> cors.configure(http))
@@ -33,9 +38,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/registro").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(publicPaths).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

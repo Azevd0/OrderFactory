@@ -177,6 +177,7 @@ public class PedidoService {
             if (valorRecebido.compareTo(cartaoUsado.getSaldo()) > 0) {
                 throw new RuntimeException("Saldo insuficiente!");
             }
+            cartaoUsado.setSaldo(cartaoUsado.getSaldo().subtract(valorRecebido));
             bandeiraDoCartao = cartaoUsado.getBandeiraCartao();
         }
         pedido.setValorPago(pedido.getValorPago().add(valorRecebido));

@@ -55,6 +55,10 @@ public class AtendenteService {
         if (atendenteRepository.existsByNomeIgnoreCase(atendente.getNome())) {
             throw new DataIntegrityViolationException("Já existe um atendente com esse nome!");
         }
+        if(atendenteRepository.existsByEmailIgnoreCase(atendente.getEmail())){
+            throw new DataIntegrityViolationException("Este e-mail já está em uso!");
+        }
+        atendente.setEmail(atendente.getEmail().toLowerCase());
         atendenteRepository.save(atendente);
         return new AtendenteRegisterResponse(atendente);
     }
