@@ -14,7 +14,7 @@ services:
       - SERVER_PORT=9091
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://api-db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://api-db:5433/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_CACHE_TYPE=redis

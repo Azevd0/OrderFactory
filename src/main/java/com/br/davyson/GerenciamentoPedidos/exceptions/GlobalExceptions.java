@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -99,12 +100,22 @@ public class GlobalExceptions {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardError> handleAccessDenied(BadCredentialsException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "Acesso negado! Usuário ou senha inválidos!",
+                request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
     @ExceptionHandler(OptimisticLockException.class)
     public ResponseEntity<StandardError> optimisticLock(HttpServletRequest request){
         StandardError standardError = new StandardError(
                 LocalDateTime.now(),
                 HttpStatus.CONFLICT.value(),
-                "Este pedido já está aberto no aparelho de outro funcionário!" +
+                "Este pedido já está aberto no aparelho de outro usuário!" +
                         "\n Apenas um usuário por vez pode fazer alterações.",
                 request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
