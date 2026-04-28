@@ -52,4 +52,14 @@ class AtendenteServiceTest {
         assertThrows(DataIntegrityViolationException.class, () -> atendenteService.registrarAtendente(atendente));
         Mockito.verify(atendenteRepository, Mockito.never()).save(Mockito.any(Atendente.class));
     }
+
+    @Test
+    @DisplayName("Registrar usuário")
+    void deveRegistrarUmUsuario(){
+        Atendente register = new Atendente("ramonDino@gmail.com","Ramon","mrO2025");
+        atendenteService.registrarAtendente(register);
+        Mockito.verify(atendenteRepository, Mockito.times(1)).save(Mockito.any(Atendente.class));
+    }
+
+
 }

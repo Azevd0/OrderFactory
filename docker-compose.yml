@@ -44,12 +44,26 @@ services:
   redis:
     image: redis:7.4.2-alpine
     container_name: redis_orderfactory
-    profiles: ["test", "prod"]
+    profiles: ["prod"]
     ports:
       - "6379:6379"
     networks:
       - orderfactory-network
 
+
+  redis-test:
+    image: redis:7.4.2-alpine
+    container_name: test_cache_mof
+    profiles: [ "test" ]
+    command: redis-server --port 6380
+    ports:
+      - "6380:6380"
+    networks:
+      - test-network
+
 networks:
   orderfactory-network:
+    driver: bridge
+
+  test-network:
     driver: bridge
