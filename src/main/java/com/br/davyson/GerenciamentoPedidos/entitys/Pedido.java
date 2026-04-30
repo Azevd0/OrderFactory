@@ -9,7 +9,6 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "pedido")
@@ -32,10 +31,12 @@ public class Pedido {
     @JoinTable(name = "pedido_comidas", joinColumns = @JoinColumn(name = "pedido_id"),
             inverseJoinColumns = @JoinColumn(name = "comida_id"))
     private List<Comida> comidas = new ArrayList<>();
+
     private String observacao;
     private BigDecimal valorPago = BigDecimal.ZERO;
+
     @Column(nullable = false, updatable = false)
-    private LocalDateTime data = LocalDateTime.now();
+    private final LocalDateTime data = LocalDateTime.now();
 
 
 
@@ -107,14 +108,14 @@ public class Pedido {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Pedido pedido = (Pedido) o;
-        return Objects.equals(id, pedido.id) && Objects.equals(mesa, pedido.mesa) && Objects.equals(atendente, pedido.atendente) && Objects.equals(versao, pedido.versao) && Objects.equals(comidas, pedido.comidas) && Objects.equals(observacao, pedido.observacao) && Objects.equals(valorPago, pedido.valorPago) && Objects.equals(data, pedido.data);
+        if (this == o) return true;
+        if (!(o instanceof Pedido pedido)) return false;
+        return id != null && id.equals(pedido.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mesa, atendente, versao, comidas, observacao, valorPago, data);
+        return getClass().hashCode();
     }
 }
 

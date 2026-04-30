@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AtendenteService {
@@ -41,7 +42,7 @@ public class AtendenteService {
     }
     public ListWrapper<AtendenteRegisterResponse> listarTodosOsAtendentes(){
         List<AtendenteRegisterResponse> listaDeAtendentes = atendenteRepository.findAll()
-                .stream().map(AtendenteRegisterResponse::new).toList();
+                .stream().map(AtendenteRegisterResponse::new).collect(Collectors.toList());
         return new ListWrapper<>(listaDeAtendentes);
     }
 
@@ -51,8 +52,11 @@ public class AtendenteService {
     }
     @Cacheable(value = "atendentes", key = "'pedidos_atendente_' + #atendente.id")
     public ListWrapper<PedidoResponseDTO> listarPedidosDoAtendente(Atendente atendente){
-        List<PedidoResponseDTO> atendentePedidos = atendente.getPedidos().stream().map(PedidoResponseDTO::new).toList();
-        return new ListWrapper<>(atendentePedidos);
+        return new ListWrapper<>(
+                atendente.getPedidos().stream()
+                        .map(PedidoResponseDTO::new)
+                        .collect(Collectors.toList())
+        );
     }
     @Transactional
     @CacheEvict(value = "user", allEntries = true)

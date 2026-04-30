@@ -76,13 +76,14 @@ public class Comida {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comida comida = (Comida) o;
-        return Objects.equals(id, comida.id) && Objects.equals(nome, comida.nome) && Objects.equals(descricao, comida.descricao) && Objects.equals(preco, comida.preco) && Objects.equals(categoria, comida.categoria);
+        return Objects.equals(id, comida.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, descricao, preco, categoria);
+        return Objects.hash(id);
     }
 }

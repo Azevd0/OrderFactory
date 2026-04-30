@@ -1,6 +1,7 @@
 package com.br.davyson.GerenciamentoPedidos.repositorys;
 
 import com.br.davyson.GerenciamentoPedidos.entitys.Atendente;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,8 @@ public interface AtendenteRepository extends JpaRepository<Atendente, Long> {
     Optional<UserDetails> findByEmailIgnoreCase(String email);
     Optional<Atendente> findAtendenteByEmail(String email);
 
+    @Override
+    @EntityGraph(attributePaths = "pedidos")
+    Optional<Atendente> findById(Long id);
     boolean existsByEmailIgnoreCase(String email);
 }

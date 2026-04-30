@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/comandas")
-@Tag(name = "Histórico de lançamento", description = "Consulta do histórico de itens lançados.")
+@Tag(name = "Histórico de lançamento", description = "Autenticação necessária")
 @SecurityRequirement(name = "bearerAuth")
 public class ComandaController {
     private final ComandaService comandaService;

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReciboService {
@@ -32,7 +33,7 @@ public class ReciboService {
         List<ReciboResponseDTO> listaRecibos = reciboRepository.findByDataFechamentoAfter(dataLimite)
                 .stream()
                 .map(ReciboResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
 
         return new ListWrapper<>(listaRecibos);
     }

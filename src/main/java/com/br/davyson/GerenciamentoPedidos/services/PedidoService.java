@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PedidoService {
@@ -57,7 +58,7 @@ public class PedidoService {
         List<Comida> comidas = dto.nomesComidas().stream()
                 .map(nome -> comidaRepository.findByNomeIgnoreCase(nome)
                         .orElseThrow(() -> new ObjectNotFoundException("Comida '" + nome + "' não encontrada.")))
-                .toList();
+                .collect(Collectors.toList());
 
         Pedido novoPedido = new Pedido();
         novoPedido.setAtendente(atendente);
@@ -70,7 +71,7 @@ public class PedidoService {
             Comanda comanda = new Comanda();
             comanda.setMesa(pedidoSalvo.getMesa());
             comanda.setAtendenteNome(atendente.getNome());
-            comanda.setComidaNome(comidas.stream().map(Comida::getNome).toList());
+            comanda.setComidaNome(comidas.stream().map(Comida::getNome).collect(Collectors.toList()));
             comanda.setObservacao(dto.observacao());
             comandaRepository.save(comanda);
 
@@ -118,7 +119,7 @@ public class PedidoService {
     public ListWrapper<PedidoResponseDTO> buscarPedidosPendentes(){
         List<PedidoResponseDTO> pedidos = pedidoRepository.findAll().stream()
                 .map(PedidoResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
         return new ListWrapper<>(pedidos);
     }
     @Transactional

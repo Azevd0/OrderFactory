@@ -96,13 +96,14 @@ public class Recibo {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recibo recibo = (Recibo) o;
-        return Objects.equals(id, recibo.id) && Objects.equals(dataFechamento, recibo.dataFechamento) && Objects.equals(valorTotal, recibo.valorTotal) && formaPagamento == recibo.formaPagamento;
+        return id != null && id.equals(recibo.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dataFechamento, valorTotal, formaPagamento);
+        return Objects.hash(id);
     }
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    @EntityGraph(attributePaths = "mesa")
+    @EntityGraph(attributePaths = {"comidas", "atendente"})
     Optional<Pedido> findByMesa(Integer mesa);
     boolean existsByMesa(Integer mesa);
 

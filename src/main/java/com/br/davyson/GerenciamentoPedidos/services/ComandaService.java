@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ComandaService {
@@ -27,7 +28,7 @@ public class ComandaService {
             case ESTE_MES -> LocalDateTime.now().minusMonths(1);
         };
         List<ComandaDTO> listaComanda = comandaRepository.findByDataLancamentoAfter(dataLimite)
-                .stream().map(ComandaDTO::new).toList();
+                .stream().map(ComandaDTO::new).collect(Collectors.toList());
         return new ListWrapper<>(listaComanda);
     }
 

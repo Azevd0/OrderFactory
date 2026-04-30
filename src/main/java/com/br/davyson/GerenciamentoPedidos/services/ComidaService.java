@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,14 +29,15 @@ public class ComidaService {
     }
     @Cacheable(value = "cardapio", key = "'menu_completo'")
     public ListWrapper<ComidaResponseDTO> openMenu(){
-        List<ComidaResponseDTO> cardapio = comidaRepository.findAll().stream().map(ComidaResponseDTO::new).toList();
+        List<ComidaResponseDTO> cardapio = comidaRepository.findAll()
+                .stream().map(ComidaResponseDTO::new).collect(Collectors.toList());
         return new ListWrapper<>(cardapio);
     }
     @Cacheable(value = "cardapio", key = "'busca_nome_' + #nome")
     public ListWrapper<ComidaResponseDTO> findComida(String nome) {
         List<ComidaResponseDTO> comida = comidaRepository.findByNomeContainingIgnoreCase(nome).stream()
                 .map(ComidaResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
 
         if (comida.isEmpty()) {
             throw new ObjectNotFoundException("Nenhuma comida encontrada com o termo: " + nome);
@@ -51,7 +53,7 @@ public class ComidaService {
         List<ComidaResponseDTO> foodList = comidaRepository.findByCategoriaNomeIgnoreCase(nome)
                 .stream()
                 .map(ComidaResponseDTO::new)
-                .toList();
+                .collect(Collectors.toList());
         if(foodList.isEmpty()){
             throw new ObjectNotFoundException("Categoria " +nome+ " não existe");
         }

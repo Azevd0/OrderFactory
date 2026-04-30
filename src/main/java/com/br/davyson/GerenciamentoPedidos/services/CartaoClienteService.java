@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartaoClienteService {
@@ -35,7 +36,8 @@ public class CartaoClienteService {
 
     @CachePut(value = "clientes", key = "'all_cards'")
     public ListWrapper<CartaoClienteResponseDTO> listarCartoes() {
-        List<CartaoClienteResponseDTO> cartoes = repository.findAll().stream().map(CartaoClienteResponseDTO::new).toList();
+        List<CartaoClienteResponseDTO> cartoes = repository.findAll()
+                .stream().map(CartaoClienteResponseDTO::new).collect(Collectors.toList());
         return new ListWrapper<>(cartoes);
     }
     @CachePut(value = "clientes", key = "'card_' + #id")

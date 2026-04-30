@@ -35,8 +35,9 @@ services:
       - ./postgres-db:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
-      interval: 5s
+      interval: 10s
       retries: 5
+      timeout: 5s
     networks:
       - orderfactory-network
 

@@ -102,14 +102,15 @@ public class Atendente implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Atendente atendente = (Atendente) o;
-        return Objects.equals(id, atendente.id) && Objects.equals(email, atendente.email) && Objects.equals(nome, atendente.nome) && Objects.equals(senha, atendente.senha) && Objects.equals(pedidos, atendente.pedidos) && role == atendente.role;
+        return Objects.equals(id, atendente.id) && Objects.equals(email, atendente.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, nome, senha, pedidos, role);
+        return Objects.hash(id, email);
     }
 
     @Override

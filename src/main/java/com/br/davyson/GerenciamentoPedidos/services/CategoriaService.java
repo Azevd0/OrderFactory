@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoriaService {
@@ -27,7 +28,7 @@ public class CategoriaService {
     @Cacheable(value = "cardapio", key = "'todas_categorias'")
     public ListWrapper<CategoriaResponseDTO> ListAll() {
         List<CategoriaResponseDTO> categorias = categoriaRepository.findAll()
-                .stream().map(CategoriaResponseDTO::new).toList();
+                .stream().map(CategoriaResponseDTO::new).collect(Collectors.toList());
         return new ListWrapper<>(categorias);
     }
 

@@ -3,6 +3,7 @@ package com.br.davyson.GerenciamentoPedidos.dto.response;
 import com.br.davyson.GerenciamentoPedidos.entitys.Comanda;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComandaDTO {
@@ -10,7 +11,7 @@ public class ComandaDTO {
     private Long id;
     private Integer mesa;
     private String atendenteNome;
-    private List<String> comidaNome;
+    private List<String> comidaNome = new ArrayList<>();
     private String observacao;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

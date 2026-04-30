@@ -27,7 +27,7 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
-    @Operation(summary = "Listar todos os pedidos pendentes")
+    @Operation(summary = "Listar todos os pedidos pendentes",description = "Autenticação necessária")
     @GetMapping("/pendencias")
     public ResponseEntity<ListWrapper<PedidoResponseDTO>> listarPendentes() {
         return ResponseEntity.ok(pedidoService.buscarPedidosPendentes());

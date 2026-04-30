@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PedidoResponseDTO {
 
     private Long id;
     private Integer mesa;
     private String nomeAtendente;
-    private List<String> comidas;
+    private List<String> comidas = new ArrayList<>();
     private BigDecimal subTotal;
     private BigDecimal taxaServico;
     private BigDecimal valorTotal;
@@ -46,7 +48,7 @@ public class PedidoResponseDTO {
         this.nomeAtendente = pedido.getAtendente() != null ? pedido.getAtendente().getNome() : "Não atribuído";
         this.comidas = pedido.getComidas().stream()
                 .map(comida -> comida.getNome() + " - R$ " + comida.getPreco())
-                .toList();
+                .collect(Collectors.toList());
         this.subTotal = pedido.getSubtotal();
         this.taxaServico = pedido.getTaxaServico();
         this.valorTotal = pedido.getValorTotal();
